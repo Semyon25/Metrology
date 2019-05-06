@@ -9,8 +9,13 @@
         Title="MainWindow" Height="500" Width="970">
     <Window.Resources>
         <local:InitStateButtonConverter  x:Key="InitStateButtonConverter"/>
+        <local:SetStateButtonConverter  x:Key="SetStateButtonConverter"/>
+        <local:MeasStateButtonConverter  x:Key="MeasStateButtonConverter"/>
+        <local:MeasCurrStateButtonConverter  x:Key="MeasCurrStateButtonConverter"/>
+        <local:IsEnabledRadioButtonConverter  x:Key="IsEnabledRadioButtonConverter"/>
         <local:BoolToBoolConverter  x:Key="BoolToBoolConverter"/>
         <local:ChoosePlateComboBoxConverter  x:Key="ChoosePlateComboBoxConverter"/>
+        <local:AmountPlatesConverter  x:Key="AmountPlatesConverter"/>
         <Style TargetType="DockPanel">
             <Setter Property="Background" Value="#FFE1F0F9"/>
         </Style>
@@ -25,179 +30,203 @@
             <Setter Property="Margin" Value="5,0,3,0"/>
         </Style>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"></ColumnDefinition>
-            <ColumnDefinition Width="270"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8">
-            <DockPanel Margin="0,0,10,0">
-            <GroupBox Margin="5" Header="Инициализация системы">
-                <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding Initialization}" Content="{Binding InitState, Converter={StaticResource InitStateButtonConverter}}" VerticalAlignment="Center" Padding="5" Margin="5" Width="150"/>
-                    <TextBlock Text="{Binding AmountPlates, StringFormat=Плат в системе: \{0\}}" VerticalAlignment="Center"  />
-                </StackPanel>
-            </GroupBox>
+    <DockPanel Background="#FFF9F9F9">
+        <Menu DockPanel.Dock="Top" Background="#FF1A73A8" Foreground="White">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Создать" Foreground="Black" />
+                <MenuItem Header="Открыть" Foreground="Black" />
+                <MenuItem Header="Сохранить" Foreground="Black" />
+                <Separator />
+                <MenuItem Header="Закрыть" Foreground="Black" />
+            </MenuItem>
+            <MenuItem Header="Редактирование">
+                <MenuItem Header="Изменить параметры проекта" Foreground="Black"/>
+            </MenuItem>
+            <MenuItem Header="Справка">
+                <MenuItem Header="О программе" Foreground="Black"/>
+                <MenuItem Header="Справка" Foreground="Black"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"></ColumnDefinition>
+                <ColumnDefinition Width="270"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8">
+                <DockPanel Margin="0,0,10,0">
+                    <GroupBox Margin="5" Header="Инициализация системы">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Command="{Binding Initialization}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" 
+                                    Content="{Binding InitState, Converter={StaticResource InitStateButtonConverter}}" 
+                                    VerticalAlignment="Center" Padding="5" Margin="5" Width="150" Height="30"/>
+                            <TextBlock Text="{Binding AmountPlates, Converter={StaticResource AmountPlatesConverter}}" VerticalAlignment="Center" Margin="10,0"  />
+                        </StackPanel>
+                    </GroupBox>
+                </DockPanel>
+                <DockPanel Margin="10,0,0,0">
+                    <GroupBox Margin="5" Header="Выбор платы" IsEnabled="{Binding InitState}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Выберите плату для работы:" VerticalAlignment="Center" />
+                            <ComboBox x:Name="List_Plates" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" ItemsSource="{Binding Plates}" SelectedItem="{Binding Plate}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </GroupBox>
+                </DockPanel>
+            </StackPanel>
+            <DockPanel Grid.Row="1" Margin="10" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
+                <RadioButton x:Name="SetLogicLevel" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top"  FontSize="10" GroupName="Mode">Установка логических уровней напряжения</RadioButton>
+                <GroupBox Margin="5" Header="Установка напряжений" IsEnabled="{Binding ElementName=SetLogicLevel, Path=IsChecked}" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SetLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
+                        <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetLL.Voltage}" HorizontalAlignment="Center" VerticalAlignment="Center" KeyDown="TextBox_KeyDown" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
+                        <Button Command="{Binding SetLogicLevel}" Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30" Content="{Binding StateButton, Converter={StaticResource SetStateButtonConverter}}"/>
+                    </Grid>
+                </GroupBox>
             </DockPanel>
-            <DockPanel Margin="10,0,0,0">
-                <GroupBox Margin="5" Header="Выбор платы" IsEnabled="{Binding InitState}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Выберите плату для работы:" VerticalAlignment="Center" />
-                    <ComboBox x:Name="List_Plates" ItemsSource="{Binding Plates}" SelectedItem="{Binding Plate}" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                </StackPanel>
-            </GroupBox>
+            <DockPanel Grid.Row="1" Margin="10" Grid.Column="1" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
+                <RadioButton x:Name="MeasLogicLevel" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Измерение логических уровней напряжения</RadioButton>
+                <GroupBox Margin="5" Header="Измерение напряжений" IsEnabled="{Binding ElementName=MeasLogicLevel, Path=IsChecked}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBlock Text="{Binding MeasLL.Voltage, StringFormat=\{0\} В}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <Button Content="{Binding StateButton, Converter={StaticResource MeasStateButtonConverter}}" Command="{Binding MeasLogicLevel}"
+                                Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30"/>
+                    </Grid>
+                </GroupBox>
             </DockPanel>
-        </StackPanel>
-        <DockPanel Grid.Row="1" Margin="10" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
-            <RadioButton x:Name="SetLogicLevel" DockPanel.Dock="Top"  FontSize="10" GroupName="Mode">Установка логических уровней напряжения</RadioButton>
-            <GroupBox Margin="5" Header="Установка напряжений" IsEnabled="{Binding ElementName=SetLogicLevel, Path=IsChecked}" >
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <ComboBox ItemsSource="{Binding Channels}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
-                    <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
-                    <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30">Установить</Button>
-                </Grid>
-            </GroupBox>
-        </DockPanel>
-        <DockPanel Grid.Row="1" Margin="10" Grid.Column="1" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
-            <RadioButton x:Name="MeasLogicLevel" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Измерение логических уровней напряжения</RadioButton>
-            <GroupBox Margin="5" Header="Измерение напряжений" IsEnabled="{Binding ElementName=MeasLogicLevel, Path=IsChecked}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <ComboBox ItemsSource="{Binding Channels}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBlock Text="0 В" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30">Измерить</Button>
-                </Grid>
-            </GroupBox>
-        </DockPanel>
-        <DockPanel Grid.Row="2" Margin="10" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
-            <RadioButton x:Name="SetVoltage" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Установка напряжений источников питания</RadioButton>
-            <GroupBox Margin="5" Header="Источники питания" IsEnabled="{Binding ElementName=SetVoltage, Path=IsChecked}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Выбор источника:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <ComboBox Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
-                    <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30">Установить</Button>
-                </Grid>
-            </GroupBox>
-        </DockPanel>
+            <DockPanel Grid.Row="2" Margin="10" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
+                <RadioButton x:Name="SetVoltage" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Установка напряжений источников питания</RadioButton>
+                <GroupBox Margin="5" Header="Источники питания" IsEnabled="{Binding ElementName=SetVoltage, Path=IsChecked}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Выбор источника:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
+                        <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30">Установить</Button>
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
 
-        <DockPanel Grid.Row="2" Margin="10" Grid.Column="1" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
-            <RadioButton x:Name="MeasInputCurr" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Измерение входных токов</RadioButton>
-            <GroupBox Margin="5" Header="Измерение токов" IsEnabled="{Binding ElementName=MeasInputCurr, Path=IsChecked}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <ComboBox ItemsSource="{Binding Channels}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBlock Text="Величина тока:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBlock Text="0 мА" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30">Измерить</Button>
-                </Grid>
-            </GroupBox>
-        </DockPanel>
+            <DockPanel Grid.Row="2" Margin="10" Grid.Column="1" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
+                <RadioButton x:Name="MeasInputCurr" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Измерение входных токов</RadioButton>
+                <GroupBox Margin="5" Header="Измерение токов" IsEnabled="{Binding ElementName=MeasInputCurr, Path=IsChecked}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasC.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Величина тока:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBlock Text="{Binding MeasC.Current, StringFormat=\{0\} мА}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30"
+                                Content="{Binding StateButton, Converter={StaticResource MeasCurrStateButtonConverter}}"
+                                Command="{Binding MeasCurr}"/>
+                        
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
 
-        <DockPanel Grid.Row="1" Margin="10" Grid.Column="2" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
-            <RadioButton x:Name="MakeImpuls" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Формирование импульсной последовательности</RadioButton>
-            <GroupBox Margin="5" Header="Формирование импульсов" IsEnabled="{Binding ElementName=MakeImpuls, Path=IsChecked}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <ComboBox ItemsSource="{Binding Channels}" Margin="5,0"  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBlock Text="Уровень лог. 1:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <TextBlock Text="Уровень лог. 0:" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <TextBlock Text="Период следования, нс:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBox Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <TextBlock Text="Длительность импульса, нс:" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBox Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.Column="2" Grid.ColumnSpan="2">Установить</Button>
-                </Grid>
-            </GroupBox>
-        </DockPanel>
+            <DockPanel Grid.Row="1" Margin="10" Grid.Column="2" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
+                <RadioButton x:Name="MakeImpuls" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Формирование импульсной последовательности</RadioButton>
+                <GroupBox Margin="5" Header="Формирование импульсов" IsEnabled="{Binding ElementName=MakeImpuls, Path=IsChecked}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox ItemsSource="{Binding Channels}" Margin="5,0"  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Уровень лог. 1:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Уровень лог. 0:" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Период следования, нс:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Длительность импульса, нс:" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.Column="2" Grid.ColumnSpan="2">Установить</Button>
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
 
-        <DockPanel Grid.Row="2" Margin="10" Grid.Column="2" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
-            <RadioButton x:Name="Counter" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Счетчик</RadioButton>
-            <GroupBox Margin="5" Header="Формирование импульсов" IsEnabled="{Binding ElementName=Counter, Path=IsChecked}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="150"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <ComboBox ItemsSource="{Binding Channels}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBlock Text="Частота:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBlock Text="0 Гц" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="1" />
-                    <TextBlock Text="Количество импульсов:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <TextBlock Text="0" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.ColumnSpan="2" Grid.Column="2">Установить</Button>
-                </Grid>
-            </GroupBox>
-        </DockPanel>
-    </Grid>
+            <DockPanel Grid.Row="2" Margin="10" Grid.Column="2" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
+                <RadioButton x:Name="Counter" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Счетчик</RadioButton>
+                <GroupBox Margin="5" Header="Формирование импульсов" IsEnabled="{Binding ElementName=Counter, Path=IsChecked}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="150"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox ItemsSource="{Binding Channels}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Частота:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBlock Text="0 Гц" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="1" />
+                        <TextBlock Text="Количество импульсов:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBlock Text="0" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.ColumnSpan="2" Grid.Column="2">Установить</Button>
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
 </Window>

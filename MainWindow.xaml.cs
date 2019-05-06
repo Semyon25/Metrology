@@ -25,5 +25,23 @@ namespace Metrology
             InitializeComponent();
             DataContext = new MainVM();
         }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Key number = e.Key;
+            //if ((number < Key.D0 || number > Key.D9) && number != Key.Back && number != ) //цифры, клавиша BackSpace и запятая а ASCII
+            //{
+            //    e.Handled = true;
+            //}
+        }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            Key number = e.Key;
+            if ((number < Key.D0 || number > Key.D9) && number != Key.Back && number != Key.OemComma) //цифры, клавиша BackSpace и запятая а ASCII
+            {
+                e.Handled = true;
+            }
+        }
     }
 }
