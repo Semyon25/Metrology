@@ -16,3 +16,5 @@ C:\Users\Panichev.s\source\repos\Metrology\bin\Debug\System.Windows.Interactivit
 C:\Users\Panichev.s\source\repos\Metrology\obj\Debug\Metrology.csproj.CopyComplete
 C:\Users\Panichev.s\source\repos\Metrology\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Panichev.s\source\repos\Metrology\obj\Debug\Metrology.csprojAssemblyReference.cache
+C:\Users\Panichev.s\source\repos\Metrology\bin\Debug\WpfEx.dll
+C:\Users\Panichev.s\source\repos\Metrology\bin\Debug\WpfEx.pdb

@@ -22,6 +22,7 @@ namespace Metrology
             SetLL = new SetLogicLevelClass();
             MeasLL = new MeasLogicLevelClass();
             MeasC = new MeasCurrentClass();
+            SetImp = new ImpulsClass();
         }
 
         public enum StateButtons {Off=0, SetLogicLev, MeasLogicLev, MakeImpuls, SetVoltage, MeasInputCurr, Counter };
@@ -86,7 +87,12 @@ namespace Metrology
             get { return measC; }
             set { measC = value; OnPropertyChanged(); }
         }
-
+        private ImpulsClass setImp;
+        public ImpulsClass SetImp
+        {
+            get { return setImp; }
+            set { setImp = value; OnPropertyChanged(); }
+        }
 
 
 
@@ -131,7 +137,7 @@ namespace Metrology
             {
                 if (setLogicLevel == null)
                     setLogicLevel = new MyCommand(SetLogicLevelButton, () => {
-                        if (SetLL.Channel > 0 && SetLL.Voltage > 0) return true;
+                        if (SetLL.Channel > 0) return true;
                         else return false;
                     });
                 return setLogicLevel;
@@ -139,6 +145,7 @@ namespace Metrology
         }
         public void SetLogicLevelButton()
         {
+            if (SetLL.Voltage == null || SetLL.Voltage==0) return;
             if (StateButton == StateButtons.Off)
             {
                 SetLL.launch();
@@ -233,6 +240,36 @@ namespace Metrology
         }
         #endregion
 
+        #region ICommand SetImpuls
+        private ICommand setImpuls;
+        public ICommand SetImpuls
+        {
+            get
+            {
+                if (setImpuls == null)
+                    setImpuls = new MyCommand(SetImpulsButton, () => {
+                        if (SetImp.Period > 0) return true;
+                        else return false;
+                    });
+                return setImpuls;
+            }
+        }
+        public void SetImpulsButton()
+        {
+            if (StateButton == StateButtons.Off)
+            {
+                SetImp.launch();
+
+                StateButton = StateButtons.MakeImpuls;
+            }
+            else
+            {
+                SetImp.stop();
+
+                StateButton = StateButtons.Off;
+            }
+        }
+        #endregion
 
 
 

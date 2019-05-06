@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:Metrology"
+        xmlns:AttachedBehaviors="clr-namespace:WpfEx.AttachedBehaviors;assembly=WpfEx"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="970">
     <Window.Resources>
@@ -12,10 +13,12 @@
         <local:SetStateButtonConverter  x:Key="SetStateButtonConverter"/>
         <local:MeasStateButtonConverter  x:Key="MeasStateButtonConverter"/>
         <local:MeasCurrStateButtonConverter  x:Key="MeasCurrStateButtonConverter"/>
+        <local:SetImpulsButtonConverter  x:Key="SetImpulsButtonConverter"/>
         <local:IsEnabledRadioButtonConverter  x:Key="IsEnabledRadioButtonConverter"/>
         <local:BoolToBoolConverter  x:Key="BoolToBoolConverter"/>
         <local:ChoosePlateComboBoxConverter  x:Key="ChoosePlateComboBoxConverter"/>
         <local:AmountPlatesConverter  x:Key="AmountPlatesConverter"/>
+        <local:DoubleToDoubleConverter  x:Key="DoubleToDoubleConverter"/>
         <Style TargetType="DockPanel">
             <Setter Property="Background" Value="#FFE1F0F9"/>
         </Style>
@@ -95,7 +98,8 @@
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SetLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetLL.Voltage}" HorizontalAlignment="Center" VerticalAlignment="Center" KeyDown="TextBox_KeyDown" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetLL.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True"  />
                         <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
                         <Button Command="{Binding SetLogicLevel}" Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30" Content="{Binding StateButton, Converter={StaticResource SetStateButtonConverter}}"/>
                     </Grid>
@@ -187,17 +191,14 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Channels}" Margin="5,0"  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text="Уровень лог. 1:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <TextBlock Text="Уровень лог. 0:" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Уровень лог. 1:" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SetImp.Vih}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Уровень лог. 0:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetImp.Vil}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <TextBlock Text="Период следования, нс:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <TextBlock Text="Длительность импульса, нс:" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.Column="2" Grid.ColumnSpan="2">Установить</Button>
+                        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SetImp.Period}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.Column="2" Grid.ColumnSpan="2"
+                                Content="{Binding StateButton, Converter={StaticResource SetImpulsButtonConverter}}" Command="{Binding SetImpuls}"/>
                     </Grid>
                 </GroupBox>
             </DockPanel>

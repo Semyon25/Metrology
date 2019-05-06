@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace Metrology
 {
-    class SetLogicLevelClass : INotifyPropertyChanged
+    class SetLogicLevelClass  : INotifyPropertyChanged
     {
         public SetLogicLevelClass(){
             
@@ -21,11 +21,11 @@ namespace Metrology
             set { channel = value; OpenATE.Reset(); OnPropertyChanged(); }
         }
 
-        private double voltage;
-        public double Voltage
+        private double? voltage;
+        public double? Voltage
         {
             get { return voltage; }
-            set { voltage = value; OnPropertyChanged(); }
+            set { voltage = Math.Round(value.Value,2); OnPropertyChanged(); }
         }
 
         public void launch()
@@ -39,7 +39,7 @@ namespace Metrology
 
             OpenATE.pe16_set_driver(plate, Channel, 1);
            
-            OpenATE.pe16_set_vih(plate, Channel, Voltage);
+            OpenATE.pe16_set_vih(plate, Channel, Voltage.Value);
             OpenATE.pe16_con_pmu(plate, Channel, 1);
             OpenATE.pe16_cpu_df(plate, Channel,1,1);
 

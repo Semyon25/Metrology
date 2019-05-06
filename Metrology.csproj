@@ -65,17 +65,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BoolToBoolConverter.cs" />
-    <Compile Include="ChoosePlateComboBoxConverter.cs" />
+    <Compile Include="Converters\DoubleToDoubleConverter.cs" />
+    <Compile Include="Converters\BoolToBoolConverter.cs" />
+    <Compile Include="Converters\ChoosePlateComboBoxConverter.cs" />
+    <Compile Include="Converters\SetImpulsButtonConverter.cs" />
     <Compile Include="MeasCurrentClass.cs" />
-    <Compile Include="MeasCurrStateButtonConverter.cs" />
+    <Compile Include="Converters\MeasCurrStateButtonConverter.cs" />
     <Compile Include="MeasLogicLevelClass.cs" />
     <Compile Include="PlateClass.cs" />
-    <Compile Include="MeasStateButtonConverter.cs" />
-    <Compile Include="IsEnabledRadioButtonConverter.cs" />
+    <Compile Include="Converters\MeasStateButtonConverter.cs" />
+    <Compile Include="Converters\IsEnabledRadioButtonConverter.cs" />
+    <Compile Include="ImpulsClass.cs" />
     <Compile Include="SetLogicLevelClass.cs" />
-    <Compile Include="SetStateButtonConverter.cs" />
-    <Compile Include="InitStateButtonConverter.cs" />
+    <Compile Include="Converters\SetStateButtonConverter.cs" />
+    <Compile Include="Converters\InitStateButtonConverter.cs" />
     <Compile Include="MainVM.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -110,8 +113,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Converters\" />
+    <ProjectReference Include="..\..\..\Documents\GitHub\WpfEx\WpfEx\WpfEx.csproj">
+      <Project>{028865ef-91bc-4d7f-b7b1-d7546a67de4e}</Project>
+      <Name>WpfEx</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
