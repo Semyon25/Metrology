@@ -9,11 +9,12 @@ using System.Windows;
 
 namespace Metrology
 {
-    class SetLogicLevelClass  : INotifyPropertyChanged
+    class CounterClass : INotifyPropertyChanged
     {
-        public SetLogicLevelClass(){
+        public CounterClass(){
             
         }
+
         private int channel;
         public int Channel
         {
@@ -21,37 +22,32 @@ namespace Metrology
             set { channel = value; OpenATE.Reset(); OnPropertyChanged(); }
         }
 
-        private double? voltage;
-        public double? Voltage
+        private double frequency;
+        public double Frequency
         {
-            get { return voltage; }
-            set { voltage = Math.Round(value.Value,2); OnPropertyChanged(); }
+            get { return frequency; }
+            set { frequency = Math.Round(value,2); OnPropertyChanged(); }
         }
+        private double amountImp;
+        public double AmountImp
+        {
+            get { return amountImp; }
+            set { amountImp = Math.Round(value, 2); OnPropertyChanged(); }
+        }
+
 
         public void launch()
         {
             int plate = MainVM.plate;
-            //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") != 0)
-            //{
-            //    MessageBox.Show("Error");
-
-            //}
-
-            OpenATE.pe16_set_driver(plate, Channel, 1);
-
-            OpenATE.pe16_set_vih(plate, Channel, Voltage.Value);
-            OpenATE.pe16_con_pmu(plate, Channel, 1);
-            OpenATE.pe16_cpu_df(plate, Channel, 1, 1);
 
         }
+
 
         public void stop()
         {
             int plate = MainVM.plate;
 
-            OpenATE.pe16_cpu_df(plate, Channel, 0, 0);
-            OpenATE.pe16_con_pmu(plate, Channel, 0);
-            OpenATE.pe16_set_driver(plate, Channel, 0);
+
         }
 
 

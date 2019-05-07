@@ -33,8 +33,8 @@ namespace Metrology
         public static extern void pe16_set_tp(int bdno, int ts, long data);
         [DllImportAttribute("PE16.dll")]
         public static extern void pe16_set_tstrob(int bdno, int pno, int ts, long data);
-        //[DllImportAttribute("PE16.dll")]
-        //public static extern long pe16_lmload(int begbdno, int boardwidth, long begadd, const char* patternfile );
+        [DllImportAttribute("PE16.dll")]
+        public static extern long pe16_lmload(int begbdno, int boardwidth, long begadd, string patternfile );
         [DllImportAttribute("PE16.dll")]
         public static extern void pe16_pmufv(int bdno, int chip, double rv, double clampi);
         [DllImportAttribute("PE16.dll")]
@@ -55,6 +55,35 @@ namespace Metrology
         public static extern void pe16_counter_start(int bdno, int onoff);
         [DllImportAttribute("PE16.dll")]
         public static extern void pe16_counter_select_ch(int bdno, int port, int ch);
+        [DllImportAttribute("PE16.dll")]
+        public static extern void pe16_set_checkmode(int bdno, int onoff);
+        [DllImportAttribute("PE16.dll")]
+        public static extern void pe16_set_addbeg(int bdno, long add);
+        [DllImportAttribute("PE16.dll")]
+        public static extern void pe16_set_addend(int bdno, long add);
+        [DllImportAttribute("PE16.dll")]
+        public static extern void pe16_fstart(int bdno, int onoff);
+        [DllImportAttribute("PE16.dll")]
+        public static extern void pe16_cycle(int bdno, int onoff);
+        [DllImportAttribute("PE16.dll")]
+        public static extern int pe16_check_tprun(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern int pe16_check_tpass(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern long pe16_rd_actlmadd(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern int pe16_rd_creg(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern long pe16_rd_actseq(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern long pe16_rd_actlmf(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern long pe16_rd_actlmd(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern long pe16_rd_actlmm(int bdno);
+        [DllImportAttribute("PE16.dll")]
+        public static extern double pe16_dps_vmeas(int bdno, int pno);
+
 
         public static void Reset()
         {

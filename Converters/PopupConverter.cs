@@ -9,17 +9,16 @@ using System.Windows.Data;
 
 namespace Metrology
 {
-    class SetImpulsButtonConverter : IValueConverter
+    class PopupConverter : IValueConverter
     {
-        public enum StateButtons { Off = 0, SetLogicLev, MeasLogicLev, MakeImpuls, SetVoltage, MeasInputCurr, Counter };
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
-        StateButtons stateButtons = (StateButtons)value;
-
-            if (stateButtons == StateButtons.MakeImpuls) return "Стоп";
-            else { return "Установить"; }
+            int p;
+            Int32.TryParse((string)parameter, out p);
+            int v = (int)value;
+            
+            if (p == v) return true;
+            else { return false; }
 
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

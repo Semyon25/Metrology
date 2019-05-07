@@ -60,7 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AmountPlatesConverter.cs" />
+    <Compile Include="Converters\AmountPlatesConverter.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -68,16 +68,15 @@
     <Compile Include="Converters\DoubleToDoubleConverter.cs" />
     <Compile Include="Converters\BoolToBoolConverter.cs" />
     <Compile Include="Converters\ChoosePlateComboBoxConverter.cs" />
-    <Compile Include="Converters\SetImpulsButtonConverter.cs" />
+    <Compile Include="Converters\ButtonContentConverter.cs" />
+    <Compile Include="Converters\PopupConverter.cs" />
+    <Compile Include="CounterClass.cs" />
     <Compile Include="MeasCurrentClass.cs" />
-    <Compile Include="Converters\MeasCurrStateButtonConverter.cs" />
     <Compile Include="MeasLogicLevelClass.cs" />
-    <Compile Include="PlateClass.cs" />
-    <Compile Include="Converters\MeasStateButtonConverter.cs" />
     <Compile Include="Converters\IsEnabledRadioButtonConverter.cs" />
     <Compile Include="ImpulsClass.cs" />
+    <Compile Include="SetSourceVoltageClass.cs" />
     <Compile Include="SetLogicLevelClass.cs" />
-    <Compile Include="Converters\SetStateButtonConverter.cs" />
     <Compile Include="Converters\InitStateButtonConverter.cs" />
     <Compile Include="MainVM.cs" />
     <Compile Include="MainWindow.xaml.cs">

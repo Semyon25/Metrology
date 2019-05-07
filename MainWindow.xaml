@@ -7,18 +7,16 @@
         xmlns:local="clr-namespace:Metrology"
         xmlns:AttachedBehaviors="clr-namespace:WpfEx.AttachedBehaviors;assembly=WpfEx"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="970">
+        Title="MainWindow" Height="530" Width="970">
     <Window.Resources>
         <local:InitStateButtonConverter  x:Key="InitStateButtonConverter"/>
-        <local:SetStateButtonConverter  x:Key="SetStateButtonConverter"/>
-        <local:MeasStateButtonConverter  x:Key="MeasStateButtonConverter"/>
-        <local:MeasCurrStateButtonConverter  x:Key="MeasCurrStateButtonConverter"/>
-        <local:SetImpulsButtonConverter  x:Key="SetImpulsButtonConverter"/>
         <local:IsEnabledRadioButtonConverter  x:Key="IsEnabledRadioButtonConverter"/>
         <local:BoolToBoolConverter  x:Key="BoolToBoolConverter"/>
         <local:ChoosePlateComboBoxConverter  x:Key="ChoosePlateComboBoxConverter"/>
         <local:AmountPlatesConverter  x:Key="AmountPlatesConverter"/>
         <local:DoubleToDoubleConverter  x:Key="DoubleToDoubleConverter"/>
+        <local:PopupConverter  x:Key="PopupConverter"/>
+        <local:ButtonContentConverter  x:Key="ButtonContentConverter"/>
         <Style TargetType="DockPanel">
             <Setter Property="Background" Value="#FFE1F0F9"/>
         </Style>
@@ -26,7 +24,7 @@
             <Setter Property="Margin" Value="10,5"/>
         </Style>
         <Style TargetType="ComboBox">
-            <Setter Property="Width" Value="50"/>
+            <Setter Property="Width" Value="55"/>
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="Width" Value="50"/>
@@ -40,7 +38,7 @@
                 <MenuItem Header="Открыть" Foreground="Black" />
                 <MenuItem Header="Сохранить" Foreground="Black" />
                 <Separator />
-                <MenuItem Header="Закрыть" Foreground="Black" />
+                <MenuItem Header="Закрыть" Foreground="Black" Click="Exit_Click" />
             </MenuItem>
             <MenuItem Header="Редактирование">
                 <MenuItem Header="Изменить параметры проекта" Foreground="Black"/>
@@ -53,11 +51,11 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="180"></RowDefinition>
+                <RowDefinition Height="210"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"></ColumnDefinition>
+                <ColumnDefinition Width="270"></ColumnDefinition>
                 <ColumnDefinition Width="270"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -96,12 +94,19 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SetLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SetLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetLL.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True"  />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetLL.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" ToolTip="Значение от -1 до 7"
+                                 
+                                 />
                         <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
-                        <Button Command="{Binding SetLogicLevel}" Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30" Content="{Binding StateButton, Converter={StaticResource SetStateButtonConverter}}"/>
+                        <StackPanel Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center">
+                        <Button Command="{Binding SetLogicLevel}" Width="150"  Height="30" Content="{Binding StateButton, ConverterParameter=1, Converter={StaticResource ButtonContentConverter}}"/>
+                            <Popup x:Name="popup1" StaysOpen="False" Placement="Mouse" MaxWidth="180" AllowsTransparency="True" IsOpen="{Binding NumPopup, ConverterParameter=1, Converter={StaticResource PopupConverter}}" >
+                                <TextBlock TextWrapping="Wrap" Width="160" Background="LightPink" Opacity="0.7" Text="Уровень напряжения лежит в диапазоне от -1.00 до 7.00"  />
+                            </Popup>
+                        </StackPanel>
                     </Grid>
                 </GroupBox>
             </DockPanel>
@@ -122,7 +127,7 @@
                         <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <TextBlock Text="{Binding MeasLL.Voltage, StringFormat=\{0\} В}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <Button Content="{Binding StateButton, Converter={StaticResource MeasStateButtonConverter}}" Command="{Binding MeasLogicLevel}"
+                        <Button Content="{Binding StateButton, ConverterParameter=2, Converter={StaticResource ButtonContentConverter}}" Command="{Binding MeasLogicLevel}"
                                 Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30"/>
                     </Grid>
                 </GroupBox>
@@ -135,6 +140,8 @@
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="35"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -142,11 +149,25 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор источника:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding Sources}" SelectedIndex="{Binding SetSV.Source}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding SetSV.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" 
+                                 Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="0" AttachedBehaviors:TextBoxBehavior.MaxValue="10" />
                         <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
-                        <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30">Установить</Button>
+                        <TextBlock Text="Напряжение:" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBlock Text="{Binding SetSV.ResultU, StringFormat=\{0\} В}" 
+                                 Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Ток:" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBlock Text="{Binding SetSV.ResultI, StringFormat=\{0\} мА}" 
+                                 Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Row="4" Grid.ColumnSpan="3" VerticalAlignment="Center" >
+                        <Button Width="150" Height="30"
+                                Content="{Binding StateButton, ConverterParameter=4, Converter={StaticResource ButtonContentConverter}}" Command="{Binding SetSourceVoltage}"/>
+                        <Popup x:Name="popup3" StaysOpen="False" Placement="Mouse" MaxWidth="180" AllowsTransparency="True" IsOpen="{Binding NumPopup, ConverterParameter=3, Converter={StaticResource PopupConverter}}" >
+                            <TextBlock TextWrapping="Wrap" Width="160" Background="LightPink" Opacity="0.7" Text="Уровень напряжения лежит в диапазоне от 0 до 10.00"  />
+                        </Popup>
+                        </StackPanel>
                     </Grid>
                 </GroupBox>
             </DockPanel>
@@ -169,7 +190,7 @@
                         <TextBlock Text="Величина тока:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <TextBlock Text="{Binding MeasC.Current, StringFormat=\{0\} мА}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30"
-                                Content="{Binding StateButton, Converter={StaticResource MeasCurrStateButtonConverter}}"
+                                Content="{Binding StateButton, ConverterParameter=5, Converter={StaticResource ButtonContentConverter}}"
                                 Command="{Binding MeasCurr}"/>
                         
                     </Grid>
@@ -192,13 +213,21 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Уровень лог. 1:" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SetImp.Vih}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SetImp.Vih}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" />
                         <TextBlock Text="Уровень лог. 0:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetImp.Vil}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetImp.Vil}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" />
+
                         <TextBlock Text="Период следования, нс:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SetImp.Period}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.Column="2" Grid.ColumnSpan="2"
-                                Content="{Binding StateButton, Converter={StaticResource SetImpulsButtonConverter}}" Command="{Binding SetImpuls}"/>
+                        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SetImp.Period}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 AttachedBehaviors:TextBoxBehavior.IsInteger="True" ToolTip="Значение от 15 до 327675"/>
+                        <StackPanel Grid.Row="2" VerticalAlignment="Center" Grid.Column="2" Grid.ColumnSpan="2">
+                            <Button Width="150" Height="30" Content="{Binding StateButton, ConverterParameter=3, Converter={StaticResource ButtonContentConverter}}" Command="{Binding SetImpuls}"/>
+                        <Popup x:Name="popup2" StaysOpen="False" Placement="Mouse" MaxWidth="180" AllowsTransparency="True" IsOpen="{Binding NumPopup, ConverterParameter=2, Converter={StaticResource PopupConverter}}" >
+                            <TextBlock TextWrapping="Wrap" Width="160" Background="LightPink" Opacity="0.7" Text="Уровень лог. 1 должен быть выше уровня лог. 0"  />
+                        </Popup>
+                        </StackPanel>
                     </Grid>
                 </GroupBox>
             </DockPanel>
@@ -219,12 +248,13 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Channels}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text="Частота:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBlock Text="0 Гц" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="1" />
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasCount.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Частота:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="2" />
+                        <TextBlock Text="{Binding MeasCount.Frequency, StringFormat=\{0\} Гц}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="3" />
                         <TextBlock Text="Количество импульсов:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBlock Text="0" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.ColumnSpan="2" Grid.Column="2">Установить</Button>
+                        <TextBlock Text="{Binding MeasCount.AmountImp}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.ColumnSpan="2" Grid.Column="2" 
+                                Content="{Binding StateButton, ConverterParameter=6, Converter={StaticResource ButtonContentConverter}}" Command="{Binding MeasCounter}"/>
                     </Grid>
                 </GroupBox>
             </DockPanel>

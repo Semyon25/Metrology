@@ -15,14 +15,17 @@ namespace Metrology
     {
         public MainVM()
         {
-            AmountPlates = 5;
+            AmountPlates = 3;
             Plates = new ObservableCollection<int>();
             Channels = new ObservableCollection<int>();
             for (int i = 1; i <= 16; i++) Channels.Add(i);
+            Sources = new ObservableCollection<string>() { "DPS1", "DPS2" };
             SetLL = new SetLogicLevelClass();
             MeasLL = new MeasLogicLevelClass();
             MeasC = new MeasCurrentClass();
             SetImp = new ImpulsClass();
+            SetSV = new SetSourceVoltageClass();
+            MeasCount = new CounterClass();
         }
 
         public enum StateButtons {Off=0, SetLogicLev, MeasLogicLev, MakeImpuls, SetVoltage, MeasInputCurr, Counter };
@@ -57,6 +60,13 @@ namespace Metrology
             set { plates = value; OnPropertyChanged(); }
         }
 
+        private ObservableCollection<string> sources;
+        public ObservableCollection<string> Sources
+        {
+            get { return sources; }
+            set { sources = value; OnPropertyChanged(); }
+        }
+
         public static int plate;
         public int Plate
         {
@@ -69,6 +79,16 @@ namespace Metrology
             get { return initState; }
             set { initState = value; OnPropertyChanged(); }
         }
+        public static int numPopup;
+        public int NumPopup
+        {
+            get { return numPopup; }
+            set { numPopup = value; OnPropertyChanged(); }
+        }
+
+
+
+
         private SetLogicLevelClass setLL;
         public SetLogicLevelClass SetLL
         {
@@ -93,7 +113,18 @@ namespace Metrology
             get { return setImp; }
             set { setImp = value; OnPropertyChanged(); }
         }
-
+        private SetSourceVoltageClass setSV;
+        public SetSourceVoltageClass SetSV
+        {
+            get { return setSV; }
+            set { setSV = value; OnPropertyChanged(); }
+        }
+        private CounterClass measCount;
+        public CounterClass MeasCount
+        {
+            get { return measCount; }
+            set { measCount = value; OnPropertyChanged(); }
+        }
 
 
         #region ICommand Initialization
@@ -145,7 +176,8 @@ namespace Metrology
         }
         public void SetLogicLevelButton()
         {
-            if (SetLL.Voltage == null || SetLL.Voltage==0) return;
+            if (SetLL.Voltage == null || SetLL.Voltage == 0) { NumPopup = 1; return; }
+            NumPopup = 0;
             if (StateButton == StateButtons.Off)
             {
                 SetLL.launch();
@@ -248,14 +280,16 @@ namespace Metrology
             {
                 if (setImpuls == null)
                     setImpuls = new MyCommand(SetImpulsButton, () => {
-                        if (SetImp.Period > 0) return true;
-                        else return false;
+                        return true;
                     });
                 return setImpuls;
             }
         }
         public void SetImpulsButton()
         {
+            if (SetImp.Vih<=SetImp.Vil) { NumPopup = 2; return; }
+
+            NumPopup = 0;
             if (StateButton == StateButtons.Off)
             {
                 SetImp.launch();
@@ -271,7 +305,70 @@ namespace Metrology
         }
         #endregion
 
+        #region ICommand SetSourceVoltage
+        private ICommand setSourceVoltage;
+        public ICommand SetSourceVoltage
+        {
+            get
+            {
+                if (setSourceVoltage == null)
+                    setSourceVoltage = new MyCommand(SetSourceVoltageButton, () => {
+                        if (SetSV.Source>=0)
+                            return true;
+                        else return false;
+                    });
+                return setSourceVoltage;
+            }
+        }
+        public void SetSourceVoltageButton()
+        {
+            if (SetSV.Voltage == null || SetSV.Voltage == 0) { NumPopup = 3; return; }
+            NumPopup = 0;
+            if (StateButton == StateButtons.Off)
+            {
+                SetSV.launch();
 
+                StateButton = StateButtons.SetVoltage;
+            }
+            else
+            {
+                SetSV.stop();
+
+                StateButton = StateButtons.Off;
+            }
+        }
+        #endregion
+
+        #region ICommand MeasCounter
+        private ICommand measCounter;
+        public ICommand MeasCounter
+        {
+            get
+            {
+                if (measCounter == null)
+                    measCounter = new MyCommand(MeasCounterButton, () => {
+                        if (MeasCount.Channel > 0) return true;
+                        else return false;
+                    });
+                return measCounter;
+            }
+        }
+        public void MeasCounterButton()
+        {
+            if (StateButton == StateButtons.Off)
+            {
+                MeasCount.launch();
+
+                StateButton = StateButtons.Counter;
+            }
+            else
+            {
+                MeasCount.stop();
+
+                StateButton = StateButtons.Off;
+            }
+        }
+        #endregion
 
 
         public event PropertyChangedEventHandler PropertyChanged;
