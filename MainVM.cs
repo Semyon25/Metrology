@@ -15,7 +15,7 @@ namespace Metrology
     {
         public MainVM()
         {
-            AmountPlates = 3;
+            AmountPlates = 0;
             Plates = new ObservableCollection<int>();
             Channels = new ObservableCollection<int>();
             for (int i = 1; i <= 16; i++) Channels.Add(i);
@@ -149,7 +149,7 @@ namespace Metrology
             }
             else
             {
-                //AmountPlates = OpenATE.pe16_init();
+                AmountPlates = OpenATE.pe16_init();
                 OpenATE.Reset();
 
                 for (int i = 1; i <= AmountPlates; i++)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Metrology
 {
-    static class OpenATE
+    unsafe static class OpenATE
     {
         [DllImportAttribute("PE16.dll")]
         public static extern void pe16_reset(int bdno);
@@ -33,8 +33,10 @@ namespace Metrology
         public static extern void pe16_set_tp(int bdno, int ts, long data);
         [DllImportAttribute("PE16.dll")]
         public static extern void pe16_set_tstrob(int bdno, int pno, int ts, long data);
+
         [DllImportAttribute("PE16.dll")]
-        public static extern long pe16_lmload(int begbdno, int boardwidth, long begadd, string patternfile );
+        public static extern long pe16_lmload(int begbdno, int boardwidth, long begadd, string patternfile);
+
         [DllImportAttribute("PE16.dll")]
         public static extern void pe16_pmufv(int bdno, int chip, double rv, double clampi);
         [DllImportAttribute("PE16.dll")]
@@ -87,8 +89,8 @@ namespace Metrology
 
         public static void Reset()
         {
-            //pe16_reset(0);
-            //pe16_cal_reset(0);
+            pe16_reset(0);
+            pe16_cal_reset(0);
         }
     }
 }

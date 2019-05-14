@@ -23,7 +23,7 @@ namespace Metrology
         public double Voltage
         {
             get { return voltage; }
-            set { if (value < -1.2) voltage = 0; else voltage = Math.Round(value,3); OnPropertyChanged(); }
+            set { if (value < -1.2) voltage = 0; else voltage = value; OnPropertyChanged(); }
         }
         DispatcherTimer timer = new DispatcherTimer();
         public void launch()

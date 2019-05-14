@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -112,9 +113,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Documents\GitHub\WpfEx\WpfEx\WpfEx.csproj">
+    <ProjectReference Include="WpfEx\WpfEx.csproj">
       <Project>{028865ef-91bc-4d7f-b7b1-d7546a67de4e}</Project>
       <Name>WpfEx</Name>
     </ProjectReference>

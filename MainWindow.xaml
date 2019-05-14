@@ -126,7 +126,7 @@
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBlock Text="{Binding MeasLL.Voltage, StringFormat=\{0\} В}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding MeasLL.Voltage, StringFormat=\{0:F3\} В}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Button Content="{Binding StateButton, ConverterParameter=2, Converter={StaticResource ButtonContentConverter}}" Command="{Binding MeasLogicLevel}"
                                 Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30"/>
                     </Grid>
@@ -156,10 +156,10 @@
                                  AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="0" AttachedBehaviors:TextBoxBehavior.MaxValue="10" />
                         <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
                         <TextBlock Text="Напряжение:" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBlock Text="{Binding SetSV.ResultU, StringFormat=\{0\} В}" 
+                        <TextBlock Text="{Binding SetSV.ResultU, StringFormat=\{0:F3\} В}" 
                                  Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <TextBlock Text="Ток:" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBlock Text="{Binding SetSV.ResultI, StringFormat=\{0\} мА}" 
+                        <TextBlock Text="{Binding SetSV.ResultI, StringFormat=\{0:F3\} мА}" 
                                  Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Grid.Row="4" Grid.ColumnSpan="3" VerticalAlignment="Center" >
                         <Button Width="150" Height="30"
@@ -188,7 +188,7 @@
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasC.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Величина тока:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBlock Text="{Binding MeasC.Current, StringFormat=\{0\} мА}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding MeasC.Current, StringFormat=\{0:F3\} мА}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30"
                                 Content="{Binding StateButton, ConverterParameter=5, Converter={StaticResource ButtonContentConverter}}"
                                 Command="{Binding MeasCurr}"/>

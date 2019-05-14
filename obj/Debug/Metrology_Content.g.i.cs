@@ -8,10 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("wpfex/bin/debug/wpfex.dll")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("wpfex/bin/debug/wpfex.pdb")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("wpfex/obj/debug/wpfex.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("wpfex/obj/debug/wpfex.pdb")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("wpfex/wpfex.csproj")]
 
 

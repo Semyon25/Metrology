@@ -23,7 +23,7 @@ namespace Metrology
         public double Current
         {
             get { return current; }
-            set { current = Math.Round(value,3); OnPropertyChanged(); }
+            set { current = value; OnPropertyChanged(); }
         }
         DispatcherTimer timer = new DispatcherTimer();
         public void launch()

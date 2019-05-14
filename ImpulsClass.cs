@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -46,13 +47,25 @@ namespace Metrology
         long iLastAddr;
 
 
-        public void launch()
+        unsafe public void launch()
         {
             int plate = MainVM.plate;
 
-            if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0)
+            
 
-            iLastAddr = OpenATE.pe16_lmload(1, 1, 0, "Generation.pez");
+                try {
+
+                
+                if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0) { }
+
+                //OpenFileDialog dialog = new OpenFileDialog();
+                //bool? result = dialog.ShowDialog();
+                //if (result==true) {
+                //    string filename = dialog.FileName;
+                //    MessageBox.Show(filename);
+                OpenATE.pe16_lmload(1, 1, 0, "Generation.pez");
+                //}
+                MessageBox.Show("хрень");
             OpenATE.pe16_set_tp(1, 1, Period/5); //настроййка длительности SSS-длительность импульса
                                              //SSS - не может быть меньше 3. Реальная длительность = SSS*5ns. Величина SSS - //65535max.
             OpenATE.pe16_con_pmu(plate, 0, 1);
@@ -60,8 +73,11 @@ namespace Metrology
             OpenATE.pe16_set_vih(plate, 0, Vih); // 4.0 - ввод высокого уровня напряжения
             OpenATE.pe16_set_vil(plate, 0, Vil); // 1.0 - ввод низкого уровня напряжения
             FTEST(1, 0, iLastAddr);
-
-
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.ToString());
+            }
 
         }
 

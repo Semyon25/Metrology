@@ -18,7 +18,9 @@ namespace Metrology
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double dummy;
-            Double.TryParse((string)value, out dummy);
+            string s = (string)value;
+            s = s.Replace(".", ",");
+            Double.TryParse(s, out dummy);
             return dummy;
         }
     }

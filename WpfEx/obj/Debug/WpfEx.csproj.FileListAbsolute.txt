@@ -1,0 +1,6 @@
+C:\Users\Panichev.s\Documents\GitHub\WpfEx\WpfEx\bin\Debug\WpfEx.dll
+C:\Users\Panichev.s\Documents\GitHub\WpfEx\WpfEx\bin\Debug\WpfEx.pdb
+C:\Users\Panichev.s\Documents\GitHub\WpfEx\WpfEx\obj\Debug\WpfEx.csproj.CoreCompileInputs.cache
+C:\Users\Panichev.s\Documents\GitHub\WpfEx\WpfEx\obj\Debug\WpfEx.dll
+C:\Users\Panichev.s\Documents\GitHub\WpfEx\WpfEx\obj\Debug\WpfEx.pdb
+C:\Users\Panichev.s\Documents\GitHub\WpfEx\WpfEx\obj\Debug\WpfEx.csprojAssemblyReference.cache

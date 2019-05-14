@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metrology", "Metrology.csproj", "{06F97CD5-388F-46D0-87DE-AEF117BA0F41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEx", "..\..\..\Documents\GitHub\WpfEx\WpfEx\WpfEx.csproj", "{028865EF-91BC-4D7F-B7B1-D7546A67DE4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEx", "WpfEx\WpfEx.csproj", "{028865EF-91BC-4D7F-B7B1-D7546A67DE4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
