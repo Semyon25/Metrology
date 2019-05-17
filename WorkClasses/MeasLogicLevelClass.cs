@@ -6,14 +6,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Metrology
 {
-    class SetLogicLevelClass  : INotifyPropertyChanged
+    class MeasLogicLevelClass : INotifyPropertyChanged
     {
-        public SetLogicLevelClass(){
-            
-        }
         private int channel;
         public int Channel
         {
@@ -21,37 +19,35 @@ namespace Metrology
             set { channel = value; OpenATE.Reset(); OnPropertyChanged(); }
         }
 
-        private double? voltage;
-        public double? Voltage
+        private double voltage;
+        public double Voltage
         {
             get { return voltage; }
-            set { voltage = Math.Round(value.Value,2); OnPropertyChanged(); }
+            set { if (value < -1.2) voltage = 0; else voltage = value; OnPropertyChanged(); }
         }
-
+        DispatcherTimer timer = new DispatcherTimer();
         public void launch()
         {
+            int Channel = channel;
             int plate = MainVM.plate;
-            //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") != 0)
-            //{
-            //    MessageBox.Show("Error");
+            //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0)
+            //    
+            //else return;
+            OpenATE.con_pmu(plate, Channel, 1);
+            timer.Tick += new EventHandler(timerTick);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 100); ;
+            timer.Start();
+        }
 
-            //}
-
-            OpenATE.pe16_set_driver(plate, Channel, 1);
-
-            OpenATE.pe16_set_vih(plate, Channel, Voltage.Value);
-            OpenATE.pe16_con_pmu(plate, Channel, 1);
-            OpenATE.pe16_cpu_df(plate, Channel, 1, 1);
-
+        private void timerTick(object sender, EventArgs e)
+        {
+            Voltage = OpenATE.vmeas(MainVM.plate, Channel);
         }
 
         public void stop()
         {
-            int plate = MainVM.plate;
-
-            OpenATE.pe16_cpu_df(plate, Channel, 0, 0);
-            OpenATE.pe16_con_pmu(plate, Channel, 0);
-            OpenATE.pe16_set_driver(plate, Channel, 0);
+            timer.Stop();
+            OpenATE.Reset();
         }
 
 
@@ -61,5 +57,6 @@ namespace Metrology
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
     }
 }

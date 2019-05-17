@@ -94,11 +94,12 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SetLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SetLL.Channel}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" 
+                                  Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetLL.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                  AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" ToolTip="Значение от -1 до 7"
-                                 
+                                 IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}"
                                  />
                         <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
                         <StackPanel Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center">
@@ -124,7 +125,8 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasLL.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasLL.Channel}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}"
+                                  Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <TextBlock Text="{Binding MeasLL.Voltage, StringFormat=\{0:F3\} В}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Button Content="{Binding StateButton, ConverterParameter=2, Converter={StaticResource ButtonContentConverter}}" Command="{Binding MeasLogicLevel}"
@@ -149,9 +151,10 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор источника:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Sources}" SelectedIndex="{Binding SetSV.Source}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding Sources}" SelectedIndex="{Binding SetSV.Source}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}"
+                                  Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Text="{Binding SetSV.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" 
+                        <TextBox Text="{Binding SetSV.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}"
                                  Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                  AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="0" AttachedBehaviors:TextBoxBehavior.MaxValue="10" />
                         <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
@@ -186,7 +189,8 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasC.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasC.Channel}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}"
+                                  Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Величина тока:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <TextBlock Text="{Binding MeasC.Current, StringFormat=\{0:F3\} мА}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Button Width="150" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30"
@@ -213,14 +217,15 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Уровень лог. 1:" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SetImp.Vih}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SetImp.Vih}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                  AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" />
                         <TextBlock Text="Уровень лог. 0:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetImp.Vil}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetImp.Vil}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                  AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" />
 
                         <TextBlock Text="Период следования, нс:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SetImp.Period}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SetImp.Period}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" 
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" 
                                  AttachedBehaviors:TextBoxBehavior.IsInteger="True" ToolTip="Значение от 15 до 327675"/>
                         <StackPanel Grid.Row="2" VerticalAlignment="Center" Grid.Column="2" Grid.ColumnSpan="2">
                             <Button Width="150" Height="30" Content="{Binding StateButton, ConverterParameter=3, Converter={StaticResource ButtonContentConverter}}" Command="{Binding SetImpuls}"/>
@@ -233,8 +238,8 @@
             </DockPanel>
 
             <DockPanel Grid.Row="2" Margin="10" Grid.Column="2" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
-                <RadioButton x:Name="Counter" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Счетчик</RadioButton>
-                <GroupBox Margin="5" Header="Формирование импульсов" IsEnabled="{Binding ElementName=Counter, Path=IsChecked}">
+                <RadioButton x:Name="Counter" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top" FontSize="10" GroupName="Mode">Измерение периода</RadioButton>
+                <GroupBox Margin="5" Header="Измерение импульсов" IsEnabled="{Binding ElementName=Counter, Path=IsChecked}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
@@ -248,11 +253,11 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasCount.Channel}" Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text="Частота:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="2" />
-                        <TextBlock Text="{Binding MeasCount.Frequency, StringFormat=\{0\} Гц}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="3" />
-                        <TextBlock Text="Количество импульсов:" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBlock Text="{Binding MeasCount.AmountImp}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasCount.Channel}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}"
+                                  Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Длительность импульса:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.ColumnSpan="2" />
+                        <TextBlock Text="{Binding MeasCount.Frequency, StringFormat=\{0:F1\} нс}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="2" />
+                        
                         <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.ColumnSpan="2" Grid.Column="2" 
                                 Content="{Binding StateButton, ConverterParameter=6, Converter={StaticResource ButtonContentConverter}}" Command="{Binding MeasCounter}"/>
                     </Grid>

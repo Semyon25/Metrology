@@ -10,7 +10,7 @@ using System.Windows.Threading;
 
 namespace Metrology
 {
-    class MeasLogicLevelClass : INotifyPropertyChanged
+    class MeasCurrentClass : INotifyPropertyChanged
     {
         private int channel;
         public int Channel
@@ -19,11 +19,11 @@ namespace Metrology
             set { channel = value; OpenATE.Reset(); OnPropertyChanged(); }
         }
 
-        private double voltage;
-        public double Voltage
+        private double current;
+        public double Current
         {
-            get { return voltage; }
-            set { if (value < -1.2) voltage = 0; else voltage = value; OnPropertyChanged(); }
+            get { return current; }
+            set { current = value; OnPropertyChanged(); }
         }
         DispatcherTimer timer = new DispatcherTimer();
         public void launch()
@@ -31,9 +31,8 @@ namespace Metrology
             int Channel = channel;
             int plate = MainVM.plate;
             //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0)
-            //    
+                OpenATE.con_pmu(plate, Channel, 1);
             //else return;
-            OpenATE.pe16_con_pmu(plate, Channel, 1);
             timer.Tick += new EventHandler(timerTick);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100); ;
             timer.Start();
@@ -41,7 +40,7 @@ namespace Metrology
 
         private void timerTick(object sender, EventArgs e)
         {
-            Voltage = OpenATE.pe16_vmeas(MainVM.plate, Channel);
+            Current = OpenATE.imeas(MainVM.plate, Channel);
         }
 
         public void stop()
@@ -57,6 +56,5 @@ namespace Metrology
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
     }
 }

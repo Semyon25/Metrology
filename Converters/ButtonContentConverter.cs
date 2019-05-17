@@ -22,7 +22,7 @@ namespace Metrology
             if (p == v) return "Стоп";
             else
             {
-                if (p == 2 || p == 5) return "Измерить";
+                if (p == 2 || p == 5 || p==6) return "Измерить";
                 else return "Установить";
             }
 

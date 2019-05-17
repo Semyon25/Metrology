@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,8 +31,8 @@ namespace Metrology
             set { vil = value; OnPropertyChanged(); }
         }
 
-        private long period = 15;
-        public long Period
+        private int period = 15;
+        public int Period
         {
             get { return period; }
             set
@@ -43,63 +44,50 @@ namespace Metrology
             }
         }
 
-        int id;
-        long iLastAddr;
 
-
-        unsafe public void launch()
+        public void launch()
         {
             int plate = MainVM.plate;
 
-            
-
-                try {
-
-                
-                if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0) { }
+                //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0) { }
 
                 //OpenFileDialog dialog = new OpenFileDialog();
                 //bool? result = dialog.ShowDialog();
                 //if (result==true) {
                 //    string filename = dialog.FileName;
                 //    MessageBox.Show(filename);
-                OpenATE.pe16_lmload(1, 1, 0, "Generation.pez");
-                //}
-                MessageBox.Show("хрень");
-            OpenATE.pe16_set_tp(1, 1, Period/5); //настроййка длительности SSS-длительность импульса
-                                             //SSS - не может быть меньше 3. Реальная длительность = SSS*5ns. Величина SSS - //65535max.
-            OpenATE.pe16_con_pmu(plate, 0, 1);
-            OpenATE.pe16_set_driver(plate, 0, 1);
-            OpenATE.pe16_set_vih(plate, 0, Vih); // 4.0 - ввод высокого уровня напряжения
-            OpenATE.pe16_set_vil(plate, 0, Vil); // 1.0 - ввод низкого уровня напряжения
-            FTEST(1, 0, iLastAddr);
-            }
-            catch (Exception x)
-            {
-                MessageBox.Show(x.ToString());
-            }
 
+            int iLastAddr = OpenATE.lmload_(1, 1, 0, "Generation.pez");
+            MessageBox.Show(iLastAddr.ToString());
+            OpenATE.set_tp(1, 1, Period/5); //настроййка длительности SSS-длительность импульса
+                                             //SSS - не может быть меньше 3. Реальная длительность = SSS*5ns. Величина SSS - //65535max.
+            OpenATE.con_pmu(plate, 0, 1);
+            OpenATE.set_driver(plate, 0, 1);
+            OpenATE.set_vih(plate, 0, Vih); // 4.0 - ввод высокого уровня напряжения
+            OpenATE.set_vil(plate, 0, Vil); // 1.0 - ввод низкого уровня напряжения
+            FTEST(1, 0, iLastAddr);
+            
         }
 
-        int FTEST(int bdn, long lbeg, long lend)
+        int FTEST(int bdn, int lbeg, int lend)
         {
             int rst;
             long addr;
-            OpenATE.pe16_set_checkmode(bdn, 0);
-            OpenATE.pe16_set_addbeg(bdn, lbeg);
-            OpenATE.pe16_set_addend(bdn, lend);
-            OpenATE.pe16_fstart(bdn, 0);
-            OpenATE.pe16_cycle(bdn, 0);
-            OpenATE.pe16_fstart(bdn, 1);
-            while (OpenATE.pe16_check_tprun(bdn)>0) ; // wait for sequencer stop
-            rst = OpenATE.pe16_check_tpass(bdn);
+            OpenATE.set_checkmode(bdn, 0);
+            OpenATE.set_addbeg(bdn, lbeg);
+            OpenATE.set_addend(bdn, lend);
+            OpenATE.fstart(bdn, 0);
+            OpenATE.cycle(bdn, 0);
+            OpenATE.fstart(bdn, 1);
+            while (OpenATE.check_tprun(bdn)>0) ; // wait for sequencer stop
+            rst = OpenATE.check_tpass(bdn);
                 
                 if (rst == 0)
                 {
-                    addr = OpenATE.pe16_rd_actlmadd(bdn);
-                    MessageBox.Show("FTEST FAILED AT " + addr.ToString() + "CREG="+ OpenATE.pe16_rd_creg(bdn).ToString() + "\n");
+                    addr = OpenATE.rd_actlmadd(bdn);
+                    MessageBox.Show("FTEST FAILED AT " + addr.ToString() + "CREG="+ OpenATE.rd_creg(bdn).ToString() + "\n");
 
-                    MessageBox.Show("LMSEQ=" + OpenATE.pe16_rd_actseq(bdn).ToString() + " LMF=" + OpenATE.pe16_rd_actlmf(bdn).ToString() + " LMD=" + OpenATE.pe16_rd_actlmd(bdn).ToString() + " LMM=" + OpenATE.pe16_rd_actlmm(bdn).ToString() + "\n");
+                    MessageBox.Show("LMSEQ=" + OpenATE.rd_actseq(bdn).ToString() + " LMF=" + OpenATE.rd_actlmf(bdn).ToString() + " LMD=" + OpenATE.rd_actlmd(bdn).ToString() + " LMM=" + OpenATE.rd_actlmm(bdn).ToString() + "\n");
 
                 }
             return (rst);
@@ -114,8 +102,8 @@ namespace Metrology
         {
             int plate = MainVM.plate;
 
-            OpenATE.pe16_set_driver(plate, 0, 0);
-            OpenATE.pe16_con_pmu(plate, 0, 0);
+            OpenATE.set_driver(plate, 0, 0);
+            OpenATE.con_pmu(plate, 0, 0);
 
         }
 

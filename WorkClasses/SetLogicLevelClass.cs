@@ -6,12 +6,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace Metrology
 {
-    class MeasCurrentClass : INotifyPropertyChanged
+    class SetLogicLevelClass  : INotifyPropertyChanged
     {
+        public SetLogicLevelClass(){
+            
+        }
         private int channel;
         public int Channel
         {
@@ -19,34 +21,37 @@ namespace Metrology
             set { channel = value; OpenATE.Reset(); OnPropertyChanged(); }
         }
 
-        private double current;
-        public double Current
+        private double? voltage;
+        public double? Voltage
         {
-            get { return current; }
-            set { current = value; OnPropertyChanged(); }
-        }
-        DispatcherTimer timer = new DispatcherTimer();
-        public void launch()
-        {
-            int Channel = channel;
-            int plate = MainVM.plate;
-            //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0)
-                OpenATE.pe16_con_pmu(plate, Channel, 1);
-            //else return;
-            timer.Tick += new EventHandler(timerTick);
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 100); ;
-            timer.Start();
+            get { return voltage; }
+            set { voltage = Math.Round(value.Value,2); OnPropertyChanged(); }
         }
 
-        private void timerTick(object sender, EventArgs e)
+        public void launch()
         {
-            Current = OpenATE.pe16_imeas(MainVM.plate, Channel);
+            int plate = MainVM.plate;
+            //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") != 0)
+            //{
+            //    MessageBox.Show("Error");
+
+            //}
+
+            OpenATE.set_driver(plate, Channel, 1);
+
+            OpenATE.set_vih(plate, Channel, Voltage.Value);
+            OpenATE.con_pmu(plate, Channel, 1);
+            OpenATE.cpu_df(plate, Channel, 1, 1);
+
         }
 
         public void stop()
         {
-            timer.Stop();
-            OpenATE.Reset();
+            int plate = MainVM.plate;
+
+            OpenATE.cpu_df(plate, Channel, 0, 0);
+            OpenATE.con_pmu(plate, Channel, 0);
+            OpenATE.set_driver(plate, Channel, 0);
         }
 
 

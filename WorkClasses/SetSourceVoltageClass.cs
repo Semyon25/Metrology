@@ -45,9 +45,9 @@ namespace Metrology
         public void launch()
         {
             int plate = MainVM.plate;
-            OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\");
-            OpenATE.pe16_con_dps(0, Source, 1); //XXX – выбор источника, или 1 или 2
-            OpenATE.pe16_dps_fv(plate, Source, Voltage.Value, 10.0, -10.0); // ZZZ – номер платы, XXX – номер источника, UUU – напряжение в формате 7.25, 8.66. Диапазон – от 0 до 10.00,
+            OpenATE.cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\");
+            OpenATE.con_dps(0, Source, 1); //XXX – выбор источника, или 1 или 2
+            OpenATE.dps_fv(plate, Source, Voltage.Value, 10.0, -10.0); // ZZZ – номер платы, XXX – номер источника, UUU – напряжение в формате 7.25, 8.66. Диапазон – от 0 до 10.00,
 
             timer.Tick += new EventHandler(timerTick);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100); ;
@@ -58,14 +58,14 @@ namespace Metrology
         private void timerTick(object sender, EventArgs e)
         {
             int plate = MainVM.plate;
-            resultU = (OpenATE.pe16_dps_vmeas(plate, Source)); //измеряет виличину напряжения
-            resultI = (OpenATE.pe16_dps_mi(plate, Source));  //измеряет величину тока
+            resultU = (OpenATE.dps_vmeas(plate, Source)); //измеряет виличину напряжения
+            resultI = (OpenATE.dps_mi(plate, Source));  //измеряет величину тока
         }
 
         public void stop()
         {
             int plate = MainVM.plate;
-            OpenATE.pe16_con_dps(0, Source, 0);
+            OpenATE.con_dps(0, Source, 0);
 
             timer.Stop();
         }
