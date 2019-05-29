@@ -30,7 +30,7 @@ namespace Metrology
 
         public void launch()
         {
-            int plate = MainVM.plate;
+            int plate = MainVM.plate+1;
             //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") != 0)
             //{
             //    MessageBox.Show("Error");
@@ -47,7 +47,7 @@ namespace Metrology
 
         public void stop()
         {
-            int plate = MainVM.plate;
+            int plate = MainVM.plate+1;
 
             OpenATE.cpu_df(plate, Channel, 0, 0);
             OpenATE.con_pmu(plate, Channel, 0);

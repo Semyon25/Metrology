@@ -47,7 +47,7 @@ namespace Metrology
 
         public void launch()
         {
-            int plate = MainVM.plate;
+            int plate = MainVM.plate+1;
 
                 //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0) { }
 
@@ -59,6 +59,7 @@ namespace Metrology
 
             int iLastAddr = OpenATE.lmload_(1, 1, 0, "Generation.pez");
             MessageBox.Show(iLastAddr.ToString());
+            if (iLastAddr == -1) return;
             OpenATE.set_tp(1, 1, Period/5); //настроййка длительности SSS-длительность импульса
                                              //SSS - не может быть меньше 3. Реальная длительность = SSS*5ns. Величина SSS - //65535max.
             OpenATE.con_pmu(plate, 0, 1);
@@ -100,7 +101,7 @@ namespace Metrology
 
         public void stop()
         {
-            int plate = MainVM.plate;
+            int plate = MainVM.plate+1;
 
             OpenATE.set_driver(plate, 0, 0);
             OpenATE.con_pmu(plate, 0, 0);

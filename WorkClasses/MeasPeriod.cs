@@ -38,14 +38,14 @@ namespace Metrology
 
         public void launch()
         {
-            int plate = MainVM.plate;
+            int plate = MainVM.plate+1;
 
         }
 
 
         public void stop()
         {
-            int plate = MainVM.plate;
+            int plate = MainVM.plate+1;
 
 
         }

@@ -66,12 +66,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\BoolToInitCalConverter.cs" />
     <Compile Include="Converters\DoubleToDoubleConverter.cs" />
     <Compile Include="Converters\BoolToBoolConverter.cs" />
     <Compile Include="Converters\ChoosePlateComboBoxConverter.cs" />
     <Compile Include="Converters\ButtonContentConverter.cs" />
     <Compile Include="Converters\PopupConverter.cs" />
-    <Compile Include="WorkClasses\CounterClass.cs" />
+    <Compile Include="WorkClasses\MeasPeriod.cs" />
     <Compile Include="WorkClasses\MeasCurrentClass.cs" />
     <Compile Include="WorkClasses\MeasLogicLevelClass.cs" />
     <Compile Include="Converters\IsEnabledRadioButtonConverter.cs" />
@@ -114,6 +115,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Coder\Coder\Coder.csproj">
+      <Project>{16b4c7ab-d2ed-4b81-99cd-13cfa214a480}</Project>
+      <Name>Coder</Name>
+    </ProjectReference>
     <ProjectReference Include="WpfEx\WpfEx.csproj">
       <Project>{028865ef-91bc-4d7f-b7b1-d7546a67de4e}</Project>
       <Name>WpfEx</Name>

@@ -162,7 +162,10 @@ namespace Metrology
         public static extern int rd_actlmm(int bdno);
         [DllImportAttribute("Dll1.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern double dps_vmeas(int bdno, int pno);
-
+        [DllImportAttribute("Dll1.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern int rd_pesno(int bdno);
+        [DllImportAttribute("Dll1.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern int cal_load(int bdno, string calfile);
 
 
         public static void Reset()

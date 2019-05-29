@@ -7,11 +7,12 @@
         xmlns:local="clr-namespace:Metrology"
         xmlns:AttachedBehaviors="clr-namespace:WpfEx.AttachedBehaviors;assembly=WpfEx"
         mc:Ignorable="d"
-        Title="MainWindow" Height="530" Width="970">
+        Title="Метрология" Height="530" Width="970">
     <Window.Resources>
         <local:InitStateButtonConverter  x:Key="InitStateButtonConverter"/>
         <local:IsEnabledRadioButtonConverter  x:Key="IsEnabledRadioButtonConverter"/>
         <local:BoolToBoolConverter  x:Key="BoolToBoolConverter"/>
+        <local:BoolToInitCalConverter  x:Key="BoolToInitCalConverter"/>
         <local:ChoosePlateComboBoxConverter  x:Key="ChoosePlateComboBoxConverter"/>
         <local:AmountPlatesConverter  x:Key="AmountPlatesConverter"/>
         <local:DoubleToDoubleConverter  x:Key="DoubleToDoubleConverter"/>
@@ -43,6 +44,9 @@
             <MenuItem Header="Редактирование">
                 <MenuItem Header="Изменить параметры проекта" Foreground="Black"/>
             </MenuItem>
+            <MenuItem Header="Расширенные возможности">
+                <MenuItem Header="Отладка" Foreground="Black" Command="{Binding Debug}"/>
+            </MenuItem>
             <MenuItem Header="Справка">
                 <MenuItem Header="О программе" Foreground="Black"/>
                 <MenuItem Header="Справка" Foreground="Black"/>
@@ -65,16 +69,24 @@
                         <StackPanel Orientation="Horizontal">
                             <Button Command="{Binding Initialization}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" 
                                     Content="{Binding InitState, Converter={StaticResource InitStateButtonConverter}}" 
-                                    VerticalAlignment="Center" Padding="5" Margin="5" Width="150" Height="30"/>
+                                    VerticalAlignment="Center" Padding="5" Margin="5" Width="105" Height="30"/>
                             <TextBlock Text="{Binding AmountPlates, Converter={StaticResource AmountPlatesConverter}}" VerticalAlignment="Center" Margin="10,0"  />
                         </StackPanel>
                     </GroupBox>
                 </DockPanel>
-                <DockPanel Margin="10,0,0,0">
-                    <GroupBox Margin="5" Header="Выбор платы" IsEnabled="{Binding InitState}">
+                <DockPanel Margin="10,0,10,0">
+                    <GroupBox Margin="5" Header="Выбор платы" IsEnabled="{Binding InitCal}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Выберите плату для работы:" VerticalAlignment="Center" />
-                            <ComboBox x:Name="List_Plates" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" ItemsSource="{Binding Plates}" SelectedItem="{Binding Plate}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                            <ComboBox x:Name="List_Plates" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" ItemsSource="{Binding Plates}" SelectedIndex="{Binding Plate, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="10,0,0,0" Width="70"/>
+                        </StackPanel>
+                    </GroupBox>
+                </DockPanel>
+                <DockPanel Margin="10,0,0,0">
+                    <GroupBox Margin="5" Header="Калибровка" IsEnabled="{Binding InitState}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding InitCal, Converter={StaticResource BoolToInitCalConverter}}" VerticalAlignment="Center" Margin="10" />
+                            <Button Height="30" Width="150" Margin="20,0,0,0" Command="{Binding SearchDirectory}">Обзор</Button>
                         </StackPanel>
                     </GroupBox>
                 </DockPanel>

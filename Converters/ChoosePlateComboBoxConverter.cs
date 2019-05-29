@@ -13,7 +13,7 @@ namespace Metrology
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((int)value <=0) return false;
+            if ((int)value <0) return false;
             else { return true; }
 
         }

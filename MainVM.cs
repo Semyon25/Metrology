@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -16,7 +18,8 @@ namespace Metrology
         public MainVM()
         {
             AmountPlates = 2;
-            Plates = new ObservableCollection<int>();
+            Plates = new ObservableCollection<string>();
+            IdPlates = new ObservableCollection<string>();
             Channels = new ObservableCollection<int>();
             for (int i = 1; i <= 16; i++) Channels.Add(i);
             Sources = new ObservableCollection<string>() { "DPS1", "DPS2" };
@@ -26,6 +29,7 @@ namespace Metrology
             SetImp = new ImpulsClass();
             SetSV = new SetSourceVoltageClass();
             MeasCount = new CounterClass();
+
         }
 
         public enum StateButtons {Off=0, SetLogicLev, MeasLogicLev, MakeImpuls, SetVoltage, MeasInputCurr, Counter };
@@ -53,11 +57,18 @@ namespace Metrology
             set { channels = value; OnPropertyChanged(); }
         }
 
-        private ObservableCollection<int> plates;
-        public ObservableCollection<int> Plates
+        private ObservableCollection<string> plates;
+        public ObservableCollection<string> Plates
         {
             get { return plates; }
             set { plates = value; OnPropertyChanged(); }
+        }
+
+        private ObservableCollection<string> idPlates;
+        public ObservableCollection<string> IdPlates
+        {
+            get { return idPlates; }
+            set { idPlates = value; OnPropertyChanged(); }
         }
 
         private ObservableCollection<string> sources;
@@ -70,7 +81,7 @@ namespace Metrology
         public static int plate;
         public int Plate
         {
-            get { return plate; }
+            get {  return plate;  }
             set { plate = value; OnPropertyChanged(); }
         }
         private bool initState;
@@ -85,8 +96,18 @@ namespace Metrology
             get { return numPopup; }
             set { numPopup = value; OnPropertyChanged(); }
         }
-
-
+        private string calDirectory;
+        public string CalDirectory
+        {
+            get { return calDirectory; }
+            set { calDirectory = value; OnPropertyChanged(); }
+        }
+        private bool initCal;
+        public bool InitCal
+        {
+            get { return initCal; }
+            set { initCal = value; OnPropertyChanged(); }
+        }
 
 
         private SetLogicLevelClass setLL;
@@ -127,6 +148,26 @@ namespace Metrology
         }
 
 
+
+        // Methods
+
+        private void CalLoad()
+        {
+            string nameFile = CalDirectory;
+            int x = CalDirectory.IndexOf('.') - 4;
+            nameFile = nameFile.Remove(x, 4);
+            InitCal = true;
+            for (int i = 0; i < AmountPlates; ++i)
+            {
+                //MessageBox.Show(OpenATE.cal_load(i + 1, nameFile.Insert(x, IdPlates[i])).ToString() + nameFile.Insert(x, IdPlates[i]));
+                if (OpenATE.cal_load(i + 1, nameFile.Insert(x, IdPlates[i])) > 0)
+                { InitCal = false; break; }
+            }
+        }
+
+
+
+
         #region ICommand Initialization
         private ICommand initialization;
         public ICommand Initialization
@@ -140,11 +181,13 @@ namespace Metrology
         }
         public void InitializationButton()
         {
+            
             if (InitState)
             {
                 Plates.Clear();
 
-                Plate = -1;
+                InitCal = false;
+
                 InitState = !InitState;
             }
             else
@@ -153,10 +196,28 @@ namespace Metrology
                 OpenATE.Reset();
 
                 for (int i = 1; i <= AmountPlates; i++)
-                    Plates.Add(i);
+                {
+                    string id = Convert.ToString(OpenATE.rd_pesno(i), 16).ToUpper();
+                    IdPlates.Add(id);
+                    Plates.Add(i.ToString() + " " + id);
+                }
+
+
+                try
+                {
+                    string s = Environment.CurrentDirectory + "\\cal.txt";
+                    s = File.ReadAllText(s);
+                    CalDirectory = s.ToString();
+                    if (CalDirectory != string.Empty && AmountPlates!=0) CalLoad();
+                }
+                catch
+                {
+                    CalDirectory = string.Empty;
+                }
 
                 InitState = !InitState;
             }
+            Plate = -2;
         }
         #endregion
 
@@ -370,6 +431,55 @@ namespace Metrology
         }
         #endregion
 
+        #region ICommand Menu Debug
+        private ICommand debug;
+        public ICommand Debug
+        {
+            get
+            {
+                if (debug == null)
+                    debug = new MyCommand(DebugButton, () => {
+                        return true;
+                    });
+                return debug;
+            }
+        }
+        public void DebugButton()
+        {
+            Coder.MainWindow coder = new Coder.MainWindow();
+            coder.ShowDialog(); 
+        }
+        #endregion
+
+        #region ICommand SearchDirectory
+        private ICommand searchDirectory;
+        public ICommand SearchDirectory
+        {
+            get
+            {
+                if (searchDirectory == null)
+                    searchDirectory = new MyCommand(SearchDirectoryButton, () => {
+                        return true;
+                    });
+                return searchDirectory;
+            }
+        }
+        public void SearchDirectoryButton()
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog() { Filter = "Калибровочные файлы(*.cal)|*.cal" };
+            if (openFileDialog1.ShowDialog() == true)
+            {
+                CalDirectory = openFileDialog1.FileName;
+                string s = Environment.CurrentDirectory + "\\cal.txt";
+                File.WriteAllText(s, CalDirectory);
+                if (CalDirectory != string.Empty && AmountPlates != 0) CalLoad();
+            }
+            else
+            {
+                return;
+            }
+        }
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
