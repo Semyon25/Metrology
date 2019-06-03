@@ -166,7 +166,7 @@ namespace Metrology
         }
 
 
-
+        // ICOMMAND
 
         #region ICommand Initialization
         private ICommand initialization;
@@ -351,18 +351,21 @@ namespace Metrology
             if (SetImp.Vih<=SetImp.Vil) { NumPopup = 2; return; }
 
             NumPopup = 0;
-            if (StateButton == StateButtons.Off)
-            {
-                SetImp.launch();
 
-                StateButton = StateButtons.MakeImpuls;
-            }
-            else
-            {
-                SetImp.stop();
+            SetImp.launch();
 
-                StateButton = StateButtons.Off;
-            }
+            //if (StateButton == StateButtons.Off)
+            //{
+            //    
+
+            //    StateButton = StateButtons.MakeImpuls;
+            //}
+            //else
+            //{
+            //    SetImp.stop();
+
+            //    StateButton = StateButtons.Off;
+            //}
         }
         #endregion
 
@@ -477,6 +480,21 @@ namespace Metrology
             else
             {
                 return;
+            }
+        }
+        #endregion
+
+        #region ICommand SearchDirectoryForSequence
+        private ICommand searchDirectoryForSequence;
+        public ICommand SearchDirectoryForSequence
+        {
+            get
+            {
+                if (searchDirectoryForSequence == null)
+                    searchDirectoryForSequence = new MyCommand(SetImp.OpenFileDirectory, () => {
+                        return true;
+                    });
+                return searchDirectoryForSequence;
             }
         }
         #endregion

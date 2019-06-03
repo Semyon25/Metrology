@@ -239,6 +239,7 @@
                         <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SetImp.Period}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" 
                                  HorizontalAlignment="Center" VerticalAlignment="Center" 
                                  AttachedBehaviors:TextBoxBehavior.IsInteger="True" ToolTip="Значение от 15 до 327675"/>
+                        <Button Command="{Binding SearchDirectoryForSequence}" Grid.Row="1" Grid.Column="2" Margin="10,0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Width="160" >Выбор последовательности</Button>
                         <StackPanel Grid.Row="2" VerticalAlignment="Center" Grid.Column="2" Grid.ColumnSpan="2">
                             <Button Width="150" Height="30" Content="{Binding StateButton, ConverterParameter=3, Converter={StaticResource ButtonContentConverter}}" Command="{Binding SetImpuls}"/>
                         <Popup x:Name="popup2" StaysOpen="False" Placement="Mouse" MaxWidth="180" AllowsTransparency="True" IsOpen="{Binding NumPopup, ConverterParameter=2, Converter={StaticResource PopupConverter}}" >

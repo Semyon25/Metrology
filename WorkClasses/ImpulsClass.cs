@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -43,30 +44,46 @@ namespace Metrology
                 OnPropertyChanged();
             }
         }
+        string PezDirectory;
 
 
         public void launch()
         {
             int plate = MainVM.plate+1;
 
-                //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0) { }
 
-                //OpenFileDialog dialog = new OpenFileDialog();
-                //bool? result = dialog.ShowDialog();
-                //if (result==true) {
-                //    string filename = dialog.FileName;
-                //    MessageBox.Show(filename);
+            //if (OpenATE.cal_load_auto(0, calDirectory) != 0)
+            //{
+            //    MessageBox.Show("Не удалось открыть файл!");
+            //}
+            try
+            {
+                string s = Environment.CurrentDirectory + "\\pez.txt";
+                s = File.ReadAllText(s);
+                PezDirectory = s.ToString();
+            }
+            catch
+            {
+                PezDirectory = string.Empty;
+            }
 
-            int iLastAddr = OpenATE.lmload_(1, 1, 0, "Generation.pez");
-            MessageBox.Show(iLastAddr.ToString());
+            //MessageBox.Show(PezDirectory);
+            if (PezDirectory == string.Empty)
+            {
+                MessageBox.Show("Не загружен .pez файл");
+                return;
+            }
+                
+            int iLastAddr = OpenATE.lmload_(0, 1, 0, PezDirectory);
+            
             if (iLastAddr == -1) return;
-            OpenATE.set_tp(1, 1, Period/5); //настроййка длительности SSS-длительность импульса
+            OpenATE.set_tp(plate, 1, Period/5); //настроййка длительности SSS-длительность импульса
                                              //SSS - не может быть меньше 3. Реальная длительность = SSS*5ns. Величина SSS - //65535max.
             OpenATE.con_pmu(plate, 0, 1);
             OpenATE.set_driver(plate, 0, 1);
             OpenATE.set_vih(plate, 0, Vih); // 4.0 - ввод высокого уровня напряжения
             OpenATE.set_vil(plate, 0, Vil); // 1.0 - ввод низкого уровня напряжения
-            FTEST(1, 0, iLastAddr);
+            FTEST(plate, 0, iLastAddr);
             
         }
 
@@ -94,7 +111,16 @@ namespace Metrology
             return (rst);
         }
 
-
+        public void OpenFileDirectory()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog() { Filter = "Калибровочные файлы(*.pez)|*.pez" };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                PezDirectory = openFileDialog.FileName;
+                string s = Environment.CurrentDirectory + "\\pez.txt";
+                File.WriteAllText(s, PezDirectory);
+            }
+        }
 
 
 
