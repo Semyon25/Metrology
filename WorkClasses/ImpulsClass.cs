@@ -52,7 +52,7 @@ namespace Metrology
             int plate = MainVM.plate+1;
 
 
-            //if (OpenATE.cal_load_auto(0, calDirectory) != 0)
+            //if (OpenATE.D1666_cal_load_auto(0, calDirectory) != 0)
             //{
             //    MessageBox.Show("Не удалось открыть файл!");
             //}
@@ -74,15 +74,15 @@ namespace Metrology
                 return;
             }
                 
-            int iLastAddr = OpenATE.lmload_(0, 1, 0, PezDirectory);
+            int iLastAddr = OpenATE.D1666_lmload(0, 1, 0, PezDirectory);
             
             if (iLastAddr == -1) return;
-            OpenATE.set_tp(plate, 1, Period/5); //настроййка длительности SSS-длительность импульса
+            OpenATE.D1666_set_tp(plate, 1, Period/5); //настроййка длительности SSS-длительность импульса
                                              //SSS - не может быть меньше 3. Реальная длительность = SSS*5ns. Величина SSS - //65535max.
-            OpenATE.con_pmu(plate, 0, 1);
-            OpenATE.set_driver(plate, 0, 1);
-            OpenATE.set_vih(plate, 0, Vih); // 4.0 - ввод высокого уровня напряжения
-            OpenATE.set_vil(plate, 0, Vil); // 1.0 - ввод низкого уровня напряжения
+            OpenATE.D1666_con_pmu(plate, 0, 1);
+            OpenATE.D1666_set_driver(plate, 0, 1);
+            OpenATE.D1666_set_vih(plate, 0, Vih); // 4.0 - ввод высокого уровня напряжения
+            OpenATE.D1666_set_vil(plate, 0, Vil); // 1.0 - ввод низкого уровня напряжения
             FTEST(plate, 0, iLastAddr);
             
         }
@@ -91,21 +91,21 @@ namespace Metrology
         {
             int rst;
             long addr;
-            OpenATE.set_checkmode(bdn, 0);
-            OpenATE.set_addbeg(bdn, lbeg);
-            OpenATE.set_addend(bdn, lend);
-            OpenATE.fstart(bdn, 0);
-            OpenATE.cycle(bdn, 0);
-            OpenATE.fstart(bdn, 1);
-            while (OpenATE.check_tprun(bdn)>0) ; // wait for sequencer stop
-            rst = OpenATE.check_tpass(bdn);
+            OpenATE.D1666_set_checkmode(bdn, 0);
+            OpenATE.D1666_set_addbeg(bdn, lbeg);
+            OpenATE.D1666_set_addend(bdn, lend);
+            OpenATE.D1666_fstart(bdn, 0);
+            OpenATE.D1666_cycle(bdn, 0);
+            OpenATE.D1666_fstart(bdn, 1);
+            while (OpenATE.D1666_check_tprun(bdn)>0) ; // wait for sequencer stop
+            rst = OpenATE.D1666_check_tpass(bdn);
                 
                 if (rst == 0)
                 {
-                    addr = OpenATE.rd_actlmadd(bdn);
-                    MessageBox.Show("FTEST FAILED AT " + addr.ToString() + "CREG="+ OpenATE.rd_creg(bdn).ToString() + "\n");
+                    addr = OpenATE.D1666_rd_actlmadd(bdn);
+                    MessageBox.Show("FTEST FAILED AT " + addr.ToString() + "CREG="+ OpenATE.D1666_rd_creg(bdn).ToString() + "\n");
 
-                    MessageBox.Show("LMSEQ=" + OpenATE.rd_actseq(bdn).ToString() + " LMF=" + OpenATE.rd_actlmf(bdn).ToString() + " LMD=" + OpenATE.rd_actlmd(bdn).ToString() + " LMM=" + OpenATE.rd_actlmm(bdn).ToString() + "\n");
+                    MessageBox.Show("LMSEQ=" + OpenATE.D1666_rd_actseq(bdn).ToString() + " LMF=" + OpenATE.D1666_rd_actlmf(bdn).ToString() + " LMD=" + OpenATE.D1666_rd_actlmd(bdn).ToString() + " LMM=" + OpenATE.D1666_rd_actlmm(bdn).ToString() + "\n");
 
                 }
             return (rst);
@@ -129,8 +129,8 @@ namespace Metrology
         {
             int plate = MainVM.plate+1;
 
-            OpenATE.set_driver(plate, 0, 0);
-            OpenATE.con_pmu(plate, 0, 0);
+            OpenATE.D1666_set_driver(plate, 0, 0);
+            OpenATE.D1666_con_pmu(plate, 0, 0);
 
         }
 

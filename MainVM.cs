@@ -160,7 +160,7 @@ namespace Metrology
             for (int i = 0; i < AmountPlates; ++i)
             {
                 //MessageBox.Show(OpenATE.cal_load(i + 1, nameFile.Insert(x, IdPlates[i])).ToString() + nameFile.Insert(x, IdPlates[i]));
-                if (OpenATE.cal_load(i + 1, nameFile.Insert(x, IdPlates[i])) > 0)
+                if (OpenATE.D1666_cal_load(i + 1, nameFile.Insert(x, IdPlates[i])) > 0)
                 { InitCal = false; break; }
             }
         }
@@ -192,20 +192,20 @@ namespace Metrology
             }
             else
             {
-                AmountPlates = OpenATE.init_();
-                OpenATE.Reset();
+                AmountPlates = OpenATE.D1666_init();
+                OpenATE.Reset(); // reset_(0); cal_reset(0);
 
                 for (int i = 1; i <= AmountPlates; i++)
                 {
-                    string id = Convert.ToString(OpenATE.rd_pesno(i), 16).ToUpper();
+                    string id = Convert.ToString(OpenATE.D1666_rd_pesno(i), 16).ToUpper();
                     IdPlates.Add(id);
-                    Plates.Add(i.ToString() + " " + id);
+                    Plates.Add(i.ToString() + " " + id); // для comboBox-а
                 }
 
 
                 try
                 {
-                    string s = Environment.CurrentDirectory + "\\cal.txt";
+                    string s = Environment.CurrentDirectory + "\\cal.txt"; // Путь, где лежит файл с путем, где находятся .cal файлы
                     s = File.ReadAllText(s);
                     CalDirectory = s.ToString();
                     if (CalDirectory != string.Empty && AmountPlates!=0) CalLoad();
@@ -354,18 +354,6 @@ namespace Metrology
 
             SetImp.launch();
 
-            //if (StateButton == StateButtons.Off)
-            //{
-            //    
-
-            //    StateButton = StateButtons.MakeImpuls;
-            //}
-            //else
-            //{
-            //    SetImp.stop();
-
-            //    StateButton = StateButtons.Off;
-            //}
         }
         #endregion
 
@@ -419,18 +407,20 @@ namespace Metrology
         }
         public void MeasCounterButton()
         {
-            if (StateButton == StateButtons.Off)
-            {
-                MeasCount.launch();
+            //if (StateButton == StateButtons.Off)
+            //{
+            if (MeasCount.Vih <= MeasCount.Vil) { NumPopup = 2; return; }
+            NumPopup = 0;
+            MeasCount.launch();
 
-                StateButton = StateButtons.Counter;
-            }
-            else
-            {
-                MeasCount.stop();
+            
+            //}
+            //else
+            //{
+            //    MeasCount.stop();
 
-                StateButton = StateButtons.Off;
-            }
+            //    StateButton = StateButtons.Off;
+            //}
         }
         #endregion
 

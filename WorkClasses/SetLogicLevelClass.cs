@@ -37,11 +37,11 @@ namespace Metrology
 
             //}
 
-            OpenATE.set_driver(plate, Channel, 1);
+            OpenATE.D1666_set_driver(plate, Channel, 1);
 
-            OpenATE.set_vih(plate, Channel, Voltage.Value);
-            OpenATE.con_pmu(plate, Channel, 1);
-            OpenATE.cpu_df(plate, Channel, 1, 1);
+            OpenATE.D1666_set_vih(plate, Channel, Voltage.Value);
+            OpenATE.D1666_con_pmu(plate, Channel, 1);
+            OpenATE.D1666_cpu_df(plate, Channel, 1, 1);
 
         }
 
@@ -49,9 +49,9 @@ namespace Metrology
         {
             int plate = MainVM.plate+1;
 
-            OpenATE.cpu_df(plate, Channel, 0, 0);
-            OpenATE.con_pmu(plate, Channel, 0);
-            OpenATE.set_driver(plate, Channel, 0);
+            OpenATE.D1666_cpu_df(plate, Channel, 0, 0);
+            OpenATE.D1666_con_pmu(plate, Channel, 0);
+            OpenATE.D1666_set_driver(plate, Channel, 0);
         }
 
 

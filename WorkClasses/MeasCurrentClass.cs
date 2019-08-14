@@ -30,8 +30,8 @@ namespace Metrology
         {
             int Channel = channel;
             int plate = MainVM.plate+1;
-            //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0)
-                OpenATE.con_pmu(plate, Channel, 1);
+            //if (OpenATE.D1666_pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") == 0)
+                OpenATE.D1666_con_pmu(plate, Channel, 1);
             //else return;
             timer.Tick += new EventHandler(timerTick);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100); ;
@@ -40,7 +40,7 @@ namespace Metrology
 
         private void timerTick(object sender, EventArgs e)
         {
-            Current = OpenATE.imeas(MainVM.plate+1, Channel);
+            Current = OpenATE.D1666_imeas(MainVM.plate+1, Channel);
         }
 
         public void stop()

@@ -35,22 +35,22 @@
     <DockPanel Background="#FFF9F9F9">
         <Menu DockPanel.Dock="Top" Background="#FF1A73A8" Foreground="White">
             <MenuItem Header="Файл">
-                <MenuItem Header="Создать" Foreground="Black" />
+                <!--<MenuItem Header="Создать" Foreground="Black" />
                 <MenuItem Header="Открыть" Foreground="Black" />
                 <MenuItem Header="Сохранить" Foreground="Black" />
-                <Separator />
+                <Separator />-->
                 <MenuItem Header="Закрыть" Foreground="Black" Click="Exit_Click" />
             </MenuItem>
-            <MenuItem Header="Редактирование">
+            <!--<MenuItem Header="Редактирование">
                 <MenuItem Header="Изменить параметры проекта" Foreground="Black"/>
-            </MenuItem>
+            </MenuItem>-->
             <MenuItem Header="Расширенные возможности">
                 <MenuItem Header="Отладка" Foreground="Black" Command="{Binding Debug}"/>
             </MenuItem>
-            <MenuItem Header="Справка">
+            <!--<MenuItem Header="Справка">
                 <MenuItem Header="О программе" Foreground="Black"/>
                 <MenuItem Header="Справка" Foreground="Black"/>
-            </MenuItem>
+            </MenuItem>-->
         </Menu>
         <Grid>
             <Grid.RowDefinitions>
@@ -262,14 +262,21 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"></ColumnDefinition>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
-                            <ColumnDefinition Width="150"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBlock Text="Уровень лог. 1:" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MeasCount.Vih}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" />
+                        <TextBlock Text="Уровень лог. 0:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MeasCount.Vil}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" />
+
+                        <TextBlock Text="Выбор канала:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="2" />
                         <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding MeasCount.Channel}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}"
-                                  Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text="Длительность импульса:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.ColumnSpan="2" />
-                        <TextBlock Text="{Binding MeasCount.Frequency, StringFormat=\{0:F1\} нс}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="2" />
+                                  Margin="5,0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="Период:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.ColumnSpan="2" Grid.Column="2" />
+                        <TextBlock Text="{Binding MeasCount.Frequency, StringFormat=\{0\} нс}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Grid.Column="3" />
                         
                         <Button Width="150" Grid.Row="2" VerticalAlignment="Center" Height="30" Grid.ColumnSpan="2" Grid.Column="2" 
                                 Content="{Binding StateButton, ConverterParameter=6, Converter={StaticResource ButtonContentConverter}}" Command="{Binding MeasCounter}"/>
