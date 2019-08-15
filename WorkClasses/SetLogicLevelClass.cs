@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Metrology
 {
@@ -28,27 +29,37 @@ namespace Metrology
             set { voltage = Math.Round(value.Value,2); OnPropertyChanged(); }
         }
 
+        private double current;
+        public double Current
+        {
+            get { return current; }
+            set { current = value; OnPropertyChanged(); }
+        }
+        DispatcherTimer timer = new DispatcherTimer();
+
         public void launch()
         {
             int plate = MainVM.plate+1;
-            //if (OpenATE.pe16_cal_load_auto(plate, "C:\\OpenATE\\CAL\\PE16\\") != 0)
-            //{
-            //    MessageBox.Show("Error");
-
-            //}
 
             OpenATE.D1666_set_driver(plate, Channel, 1);
-
             OpenATE.D1666_set_vih(plate, Channel, Voltage.Value);
             OpenATE.D1666_con_pmu(plate, Channel, 1);
             OpenATE.D1666_cpu_df(plate, Channel, 1, 1);
 
+            timer.Tick += new EventHandler(timerTick);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 100); ;
+            timer.Start();
+        }
+
+        private void timerTick(object sender, EventArgs e)
+        {
+            Current = OpenATE.D1666_imeas(MainVM.plate + 1, Channel);
         }
 
         public void stop()
         {
             int plate = MainVM.plate+1;
-
+            timer.Stop();
             OpenATE.D1666_cpu_df(plate, Channel, 0, 0);
             OpenATE.D1666_con_pmu(plate, Channel, 0);
             OpenATE.D1666_set_driver(plate, Channel, 0);

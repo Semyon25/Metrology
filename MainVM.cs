@@ -17,7 +17,8 @@ namespace Metrology
     {
         public MainVM()
         {
-            AmountPlates = 2;
+            AmountPlates = 0;
+            Plate = -2;
             Plates = new ObservableCollection<string>();
             IdPlates = new ObservableCollection<string>();
             Channels = new ObservableCollection<int>();
@@ -293,7 +294,7 @@ namespace Metrology
             {
                 if (measCurr == null)
                     measCurr = new MyCommand(MeasCurrButton, () => {
-                        if (MeasLL.Channel > 0) return true;
+                        if (MeasC.Channel > 0) return true;
                         else return false;
                     });
                 return measCurr;
@@ -452,7 +453,8 @@ namespace Metrology
             {
                 if (searchDirectory == null)
                     searchDirectory = new MyCommand(SearchDirectoryButton, () => {
-                        return true;
+                        if (AmountPlates > 0) return true;
+                        else return false;
                     });
                 return searchDirectory;
             }
@@ -488,6 +490,9 @@ namespace Metrology
             }
         }
         #endregion
+
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")

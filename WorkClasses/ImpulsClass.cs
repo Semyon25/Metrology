@@ -51,11 +51,6 @@ namespace Metrology
         {
             int plate = MainVM.plate+1;
 
-
-            //if (OpenATE.D1666_cal_load_auto(0, calDirectory) != 0)
-            //{
-            //    MessageBox.Show("Не удалось открыть файл!");
-            //}
             try
             {
                 string s = Environment.CurrentDirectory + "\\pez.txt";
