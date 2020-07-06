@@ -26,7 +26,7 @@ namespace Metrology
         public double? Voltage
         {
             get { return voltage; }
-            set { voltage = Math.Round(value.Value,2); OnPropertyChanged(); }
+            set { voltage = Math.Round(value.Value,3); OnPropertyChanged(); }
         }
 
         private double current;
@@ -35,6 +35,15 @@ namespace Metrology
             get { return current; }
             set { current = value; OnPropertyChanged(); }
         }
+
+        private double measVoltage;
+        public double MeasVoltage
+        {
+            get { return measVoltage; }
+            set { measVoltage = value; OnPropertyChanged(); }
+        }
+
+
         DispatcherTimer timer = new DispatcherTimer();
 
         public void launch()
@@ -54,6 +63,7 @@ namespace Metrology
         private void timerTick(object sender, EventArgs e)
         {
             Current = OpenATE.D1666_imeas(MainVM.plate + 1, Channel);
+            MeasVoltage = OpenATE.D1666_vmeas(MainVM.plate + 1, Channel);
         }
 
         public void stop()

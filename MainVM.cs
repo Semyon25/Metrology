@@ -238,7 +238,7 @@ namespace Metrology
         }
         public void SetLogicLevelButton()
         {
-            if (SetLL.Voltage == null || SetLL.Voltage == 0) { NumPopup = 1; return; }
+            if (SetLL.Voltage == null) { NumPopup = 1; return; }
             NumPopup = 0;
             if (StateButton == StateButtons.Off)
             {
@@ -440,8 +440,8 @@ namespace Metrology
         }
         public void DebugButton()
         {
-            Coder.MainWindow coder = new Coder.MainWindow();
-            coder.ShowDialog(); 
+            //Coder.MainWindow coder = new Coder.MainWindow();
+            //coder.ShowDialog(); 
         }
         #endregion
 

@@ -29,7 +29,7 @@ namespace WpfEx.Utils
             double dummy;
             s = s.Replace(".", ",");
             bool isValid = Double.TryParse(s, out dummy);
-            return (isValid && dummy >=TextBoxBehavior.MinVal && dummy <= TextBoxBehavior.MaxVal && Math.Abs(dummy-Math.Round(dummy,2))==0);
+            return (isValid && dummy >=TextBoxBehavior.MinVal && dummy <= TextBoxBehavior.MaxVal && Math.Abs(dummy-Math.Round(dummy,3))==0);
         }
 
         /// <summary>

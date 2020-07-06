@@ -93,9 +93,10 @@
             </StackPanel>
             <DockPanel Grid.Row="1" Margin="10" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}">
                 <RadioButton x:Name="SetLogicLevel" Command="{Binding ChangeRadio}" IsEnabled="{Binding StateButton, Converter={StaticResource IsEnabledRadioButtonConverter}}" DockPanel.Dock="Top"  FontSize="10" GroupName="Mode">Установка логических уровней напряжения</RadioButton>
-                <GroupBox Margin="5" Header="Установка напряжений" IsEnabled="{Binding ElementName=SetLogicLevel, Path=IsChecked}" >
+                <GroupBox Margin="5" Header="Установка напряжений" IsEnabled="{Binding ElementName=SetLogicLevel, Path=IsChecked}">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
@@ -110,16 +111,25 @@
                         <ComboBox ItemsSource="{Binding Channels}" SelectedItem="{Binding SetLL.Channel}" IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" 
                                   Margin="5,0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <TextBlock Text="Уровень напряжения:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SetLL.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" AttachedBehaviors:TextBoxBehavior.MinValue="-1" AttachedBehaviors:TextBoxBehavior.MaxValue="7" ToolTip="Значение от -1 до 7"
+                        <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                 Text="{Binding SetLL.Voltage, Converter={StaticResource DoubleToDoubleConverter}}" 
+                                 AttachedBehaviors:TextBoxBehavior.IsDouble="True" 
+                                 AttachedBehaviors:TextBoxBehavior.MinValue="-1" 
+                                 AttachedBehaviors:TextBoxBehavior.MaxValue="7"
+                                 ToolTip="Значение от -1 до 7"
                                  IsEnabled="{Binding Plate, Converter={StaticResource ChoosePlateComboBoxConverter}}" Width="55"
                                  />
+                        
                         <TextBlock Text="В" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" />
                         <TextBlock Text="Величина тока:" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                         <TextBlock Text="{Binding SetLL.Current, StringFormat=\{0:F3\} мА}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" />
-                        <StackPanel Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Center">
+                        <TextBlock Text="Величина напряжения:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding SetLL.MeasVoltage, StringFormat=\{0:F3\} В}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+                        
+                        <StackPanel Grid.Row="4" Grid.ColumnSpan="3" VerticalAlignment="Center">
                             <Button Command="{Binding SetLogicLevel}" Width="150"  Height="30" Content="{Binding StateButton, ConverterParameter=1, Converter={StaticResource ButtonContentConverter}}"/>
-                            <Popup x:Name="popup1" StaysOpen="False" Placement="Mouse" MaxWidth="180" AllowsTransparency="True" IsOpen="{Binding NumPopup, ConverterParameter=1, Converter={StaticResource PopupConverter}}" >
+                            <Popup x:Name="popup1" StaysOpen="False" Placement="Mouse" MaxWidth="180" AllowsTransparency="True" 
+                                   IsOpen="{Binding NumPopup, ConverterParameter=1, Converter={StaticResource PopupConverter}}" >
                                 <TextBlock TextWrapping="Wrap" Width="160" Background="LightPink" Opacity="0.7" Text="Уровень напряжения лежит в диапазоне от -1.00 до 7.00"  />
                             </Popup>
                         </StackPanel>

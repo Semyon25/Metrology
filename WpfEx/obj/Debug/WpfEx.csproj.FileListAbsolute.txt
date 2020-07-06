@@ -10,3 +10,9 @@ C:\Users\Panichev.s\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.csprojAssemblyR
 C:\Users\Panichev.s\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.csproj.CoreCompileInputs.cache
 C:\Users\Panichev.s\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.dll
 C:\Users\Panichev.s\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.pdb
+C:\Users\Семен\source\repos\Metrology\WpfEx\bin\Debug\WpfEx.dll
+C:\Users\Семен\source\repos\Metrology\WpfEx\bin\Debug\WpfEx.pdb
+C:\Users\Семен\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.csprojAssemblyReference.cache
+C:\Users\Семен\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.csproj.CoreCompileInputs.cache
+C:\Users\Семен\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.dll
+C:\Users\Семен\source\repos\Metrology\WpfEx\obj\Debug\WpfEx.pdb
